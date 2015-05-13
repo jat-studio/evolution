@@ -21,10 +21,26 @@ GLfloat LightAmbient[] = {0.5, 0.5, 0.5, 1.0}; // array of ambient light
 GLfloat LightDiffuse[] = {1.0, 1.0, 1.0, 1.0}; // array of diffuse light
 GLfloat LightPosition[] = {0.5, 0.5, 0.5, 1.0}; // coordinates of light source
 
+// enter to ortho mode
+void setOrthographicProjection(void){
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  gluOrtho2D(0, 0, 1920, 1080);
+  glMatrixMode(GL_MODELVIEW);
+}
+
+// exit of ortho mode
+void restorePerspectiveProjection(void){
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+}
+
 // output string
-void DrawString(float x, float y, float z, void *font, char *string){
+void DrawStaticString(float x, float y, float z, void *font, char *string){
   char *c;
-  glRasterPos3f(x, y,z);
+  glRasterPos3f(x, y, z);
   for (c = string; *c != '\0'; c++){
     glutBitmapCharacter(font, *c);
   }
@@ -88,19 +104,28 @@ void Reshape(GLsizei Width, GLsizei Height){
 void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
+  gluLookAt(0.0, 0.0, -6.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0);
 
+  // painting world
   glPushMatrix();
-  glTranslatef(0.0, 0.0, -6);
   glBindTexture(GL_TEXTURE_2D, Tiles[0]);
   glBegin(GL_QUADS);
     glNormal3f(0.0, 0.0, 1.0);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-0.125, -0.125, 0.0);
-    glTexCoord2f(1.0, 0.0); glVertex3f(0.125, -0.125, 0.0);
-    glTexCoord2f(1.0, 1.0); glVertex3f(0.125, 0.125, 0.0);
-    glTexCoord2f(0.0, 1.0); glVertex3f(-0.125, 0.125, 0.0);
+    glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, -1.0, 0.0);
+    glTexCoord2f(1.0, 0.0); glVertex3f(1.0, -1.0, 0.0);
+    glTexCoord2f(1.0, 1.0); glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(0.0, 1.0); glVertex3f(-1.0, 1.0, 0.0);
   glEnd();
-  DrawString(0.0, 0.5, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, "Hello!");
   glPopMatrix();
+
+  // painting text
+  setOrthographicProjection();
+  glPushMatrix();
+  glLoadIdentity();
+  glColor3f(1.0, 1.0, 0.0);
+  DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, "Hello!");
+  glPopMatrix();
+  restorePerspectiveProjection();
 
   glutSwapBuffers();
 }
