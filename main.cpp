@@ -21,6 +21,10 @@ GLfloat LightAmbient[] = {0.5, 0.5, 0.5, 1.0}; // array of ambient light
 GLfloat LightDiffuse[] = {1.0, 1.0, 1.0, 1.0}; // array of diffuse light
 GLfloat LightPosition[] = {0.5, 0.5, 0.5, 1.0}; // coordinates of light source
 
+// count of tiles
+const int rows = 160;
+const int columns = 80;
+
 // enter to ortho mode
 void setOrthographicProjection(void){
   glMatrixMode(GL_PROJECTION);
@@ -108,24 +112,32 @@ void Draw(void){
 
   // painting world
   glPushMatrix();
+  glScalef(0.05, 0.05, 0.0);
   glBindTexture(GL_TEXTURE_2D, Tiles[0]);
-  glBegin(GL_QUADS);
-    glNormal3f(0.0, 0.0, 1.0);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, -1.0, 0.0);
-    glTexCoord2f(1.0, 0.0); glVertex3f(1.0, -1.0, 0.0);
-    glTexCoord2f(1.0, 1.0); glVertex3f(1.0, 1.0, 0.0);
-    glTexCoord2f(0.0, 1.0); glVertex3f(-1.0, 1.0, 0.0);
-  glEnd();
+  int loop_col;
+  int loop_row;
+  for (loop_col = 0; loop_col < columns; loop_col++){
+    for (loop_row = 0; loop_row < rows; loop_row++){
+      glBegin(GL_QUADS);
+        glNormal3f(0.0, 0.0, 1.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(((rows / 2) - loop_row), (((-1 * columns) / 2) + loop_col), 0.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(((rows / 2) - loop_row - 1), (((-1 * columns) / 2) + loop_col), 0.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(((rows / 2) - loop_row - 1), (((-1 * columns) / 2) + loop_col + 1), 0.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(((rows / 2) - loop_row), (((-1 * columns) / 2) + loop_col + 1), 0.0);
+      glEnd();
+    }
+  }
   glPopMatrix();
 
-  // painting text
+  // painting text on 2d mode
+  glColor3f(0.0, 0.0, 0.0);
   setOrthographicProjection();
   glPushMatrix();
   glLoadIdentity();
-  glColor3f(1.0, 1.0, 0.0);
   DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, "Hello!");
   glPopMatrix();
   restorePerspectiveProjection();
+  glColor3f(1.0, 1.0, 1.0);
 
   glutSwapBuffers();
 }
@@ -137,28 +149,6 @@ void Keyboard(unsigned char key, int x, int y){
     case 27:
       glDeleteTextures(1, &Tiles[0]);
       glutDestroyWindow(wnd);
-    case 'l':
-      if (light){
-        glDisable(GL_LIGHTING);
-        light = false;
-      }
-      else{
-        glEnable(GL_LIGHTING);
-        light = true;
-      }
-    break;
-    case 'b':
-      if (blend){
-        glDisable(GL_BLEND);
-        glEnable(GL_DEPTH_TEST);
-        blend = false;
-      }
-      else{
-        glEnable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-        blend = true;
-      }
-    break;
   }
 }
 
@@ -182,15 +172,6 @@ int main(int argc, char *argv[]){
   // enabling textures
   glEnable(GL_TEXTURE_2D);
 
-  // installing fon light
-  glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);
-  // installing diffuse light
-  glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);
-  // position of light
-  glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
-  // enable permission on light
-  glEnable(GL_LIGHT1);
-
   // defining events of window
   glutDisplayFunc(Draw);
   glutReshapeFunc(Reshape);
@@ -199,16 +180,9 @@ int main(int argc, char *argv[]){
 
   // init GL
   // fon color
-  glClearColor(0.5, 0.5, 0.5, 0);
-  // depth test
-  glClearDepth(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
+  glClearColor(0.5, 0.5, 0.5, 0.0);
   // smoothing paint of color
   glShadeModel(GL_SMOOTH);
-  // blending
-  glColor4f(1.0, 1.0, 1.0, 0.5); // full brightness 50% blending
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   // modificated perspective
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
