@@ -33,7 +33,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="/usr/include" />
+			<Add directory="/home/jatstudio/Projects/evolution/" />
 		</Compiler>
+		<ResourceCompiler>
+			<Add directory="/home/jatstudio/Projects/evolution/" />
+		</ResourceCompiler>
 		<Linker>
 			<Add library="glut" />
 			<Add library="GL" />
@@ -42,8 +46,11 @@
 			<Add library="IL" />
 			<Add library="ILU" />
 			<Add directory="/usr/lib" />
+			<Add directory="/home/jatstudio/Projects/evolution/" />
 		</Linker>
 		<Unit filename="main.cpp" />
+		<Unit filename="worldgen.cpp" />
+		<Unit filename="worldgen.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />
