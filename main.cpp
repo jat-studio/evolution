@@ -164,24 +164,11 @@ void Keyboard(unsigned char key, int x, int y){
     case 27:
       glDeleteTextures(1, &tiles_tex[0]);
       glutDestroyWindow(wnd);
-    case 'g':
-      if (remove("zone_00") == 0){
-        GenerateWorld("zone_00");
-        printf("generate world in file zone_00");
-        printf("\n");
-      }
-      else{
-        printf("error removing file zone_00!");
-        printf("\n");
-      }
     break;
-    case 'f':
-      for (int i = 0; i < size_zone; i++){
-        for (int j = 0; j < size_zone; j++){
-          printf("%d", load_tiles[0].tile_id [i] [j]);
-        }
-        printf("\n");
-      }
+    case 'g':
+      remove("zone_00");
+      GenerateWorld("zone_00");
+      load_tiles[0] = LoadWorld("zone_00");
     break;
   }
 }
@@ -218,7 +205,7 @@ int main(int argc, char *argv[]){
   glEnable(GL_TEXTURE_2D);
 
   // loading world
-  LoadWorld("zone_00", load_tiles);
+  load_tiles[0] = LoadWorld("zone_00");
 
   // defining events of window
   glutDisplayFunc(Draw);

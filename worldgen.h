@@ -9,6 +9,6 @@ struct tag_tiles{
 };
 
 void GenerateWorld(char* worldfile);
-void LoadWorld(char* worldfile, tag_tiles get_tiles[num_zones]);
+tag_tiles LoadWorld(char* worldfile);
 
 #endif
