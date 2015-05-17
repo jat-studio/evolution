@@ -1,7 +1,9 @@
 #include <GL/glut.h>
 #include <IL/il.h>
 #include <IL/ilu.h>
+
 #include <cstring>
+#include <iostream>
 
 #include "worldgen.h"
 
@@ -24,7 +26,7 @@ GLfloat LightPosition[] = {0.5, 0.5, 0.5, 1.0}; // coordinates of light source
 
 // fps drawing
 int fps;
-long time, dtime;
+long t, dt;
 char fps_str[50];
 
 tag_tiles load_tiles[num_zones];
@@ -75,8 +77,7 @@ void LoadTexture(const char* texName){
   int err = ilGetError();
   if (err != IL_NO_ERROR){
     const char* strError = iluErrorString(err);
-    printf("Error loading texture!\n");
-    printf(strError);
+    std::cout << "Error loading texture!\n" << strError << "\n";
     exit(EXIT_FAILURE);
   }
   // getting parameters of image
@@ -137,10 +138,10 @@ void Draw(void){
 
   // calculating fps
   fps++;
-  time = glutGet(GLUT_ELAPSED_TIME);
-  if (time - dtime > 1000){
-    sprintf(fps_str, "FPS:%4.2f", fps * 1000.0 / (time - dtime));
-    dtime = time;
+  t = glutGet(GLUT_ELAPSED_TIME);
+  if (t - dt > 1000){
+    sprintf(fps_str, "FPS:%4.2f", fps * 1000.0 / (t - dt));
+    dt = t;
     fps = 0;
   }
 
