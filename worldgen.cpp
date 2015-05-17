@@ -15,9 +15,20 @@ void GenerateWorld(char* worldfile){
   std::cout << GetHash(seed) << "\n";
   srand(seed);
 
+  int percent;
   for (int i = 0; i < size_zone; i++){
     for (int j = 0; j < size_zone; j++){
-      tiles[0].tile_id [i] [j] = rand() % 2;
+      //tiles[0].tile_id [i] [j] = rand() % 2;
+      percent = 1 + (rand() % 100);
+      tiles[0].tile_id [i] [j] = 0;
+      // 10 % chance of stone
+      if (percent > 90){
+        tiles[0].tile_id [i] [j] = 1;
+      }
+      // 20 % chance of water
+      if ((percent > 70) && (percent < 90)){
+        tiles[0].tile_id [i] [j] = 2;
+      }
     }
   }
   int str_write;

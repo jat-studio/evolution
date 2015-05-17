@@ -51,6 +51,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="worldgen.cpp" />
 		<Unit filename="worldgen.h" />
+		<Unit filename="xxhash.cpp" />
+		<Unit filename="xxhash.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

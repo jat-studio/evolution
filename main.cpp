@@ -9,12 +9,12 @@
 
 int wnd;            // id GLwindow
 
-GLuint tiles_tex[1];    // index texture of tiles
+GLuint tiles_tex[2];    // index texture of tiles
 
 // parameters of image
-int width = 0;
-int height = 0;
-int bpp = 0;
+int width;
+int height;
+int bpp;
 unsigned int type;
 unsigned char* data_img;
 
@@ -30,6 +30,92 @@ long t, dt;
 char fps_str[50];
 
 tag_tiles load_tiles[num_zones];
+
+// loading texture by filename
+void LoadTextureImage(const char* texName){
+  // initializing il and ilu library
+  ilInit();
+  iluInit();
+  // loading texture
+  char ext[5] = "";
+  ext[0] = texName[strlen(texName) - 4];
+  ext[1] = texName[strlen(texName) - 3];
+  ext[2] = texName[strlen(texName) - 2];
+  ext[3] = texName[strlen(texName) - 1];
+  ext[4] = NULL;
+  if (strcmp(ext, ".bmp") == 0){
+    ilLoad(IL_BMP, texName);
+  }
+  if (strcmp(ext, ".tga") == 0){
+    ilLoad(IL_TGA, texName);
+  }
+  // processing of errors
+  int err = ilGetError();
+  if (err != IL_NO_ERROR){
+    const char* strError = iluErrorString(err);
+    std::cout << "Error loading texture!\n" << texName << "\n" << strError << "\n";
+    exit(EXIT_FAILURE);
+  }
+  // getting parameters of image
+  width  = ilGetInteger(IL_IMAGE_WIDTH);
+  height = ilGetInteger(IL_IMAGE_HEIGHT);
+  bpp    = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+  // getting data of image
+  data_img = ilGetData();
+  // determination type of image
+  switch (bpp){
+    case 1:
+      type = GL_RGB8;
+    break;
+    case 3:
+      type = GL_RGB;
+    break;
+    case 4:
+      type = GL_RGBA;
+    break;
+  }
+}
+
+// loading textures
+void LoadTextures(void){
+  // create array of textures
+  glGenTextures(3, &tiles_tex[0]);
+
+  // getting data textures of tiles
+  LoadTextureImage("grass.bmp");
+  // loading textures into memory
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[0]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+  free(data_img);
+
+  // getting data textures of tiles
+  LoadTextureImage("stone.bmp");
+  // texture with linear filter
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[1]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+  free(data_img);
+
+  // getting data textures of tiles
+  LoadTextureImage("water.bmp");
+  // texture with linear filter
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[2]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+  free(data_img);
+
+  // enabling textures
+  glEnable(GL_TEXTURE_2D);
+}
+
+// deleting textures
+void clearTextures(void){
+  glDeleteTextures(2, &tiles_tex[0]);
+}
 
 // enter to ortho mode
 void setOrthographicProjection(void){
@@ -55,50 +141,6 @@ void DrawStaticString(float x, float y, float z, void *font, char *string){
     glutBitmapCharacter(font, *c);
   }
 }
-// loading texture by filename
-void LoadTexture(const char* texName){
-  // initializing il and ilu library
-  ilInit();
-  iluInit();
-  // loading texture
-  char ext[5] = "";
-  ext[0] = texName[strlen(texName) - 4];
-  ext[1] = texName[strlen(texName) - 3];
-  ext[2] = texName[strlen(texName) - 2];
-  ext[3] = texName[strlen(texName) - 1];
-  ext[4] = NULL;
-  if (strcmp(ext, ".bmp") == 0){
-    ilLoad(IL_BMP, texName);
-  }
-  if (strcmp(ext, ".tga") == 0){
-    ilLoad(IL_TGA, texName);
-  }
-  // processing of errors
-  int err = ilGetError();
-  if (err != IL_NO_ERROR){
-    const char* strError = iluErrorString(err);
-    std::cout << "Error loading texture!\n" << strError << "\n";
-    exit(EXIT_FAILURE);
-  }
-  // getting parameters of image
-  width  = ilGetInteger(IL_IMAGE_WIDTH);
-  height = ilGetInteger(IL_IMAGE_HEIGHT);
-  bpp    = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-  // getting data of image
-  data_img = ilGetData();
-  // determination type of image
-  switch (bpp){
-    case 1:
-      type = GL_RGB8;
-    break;
-    case 3:
-      type = GL_RGB;
-    break;
-    case 4:
-      type = GL_RGBA;
-    break;
-  }
-}
 
 // repainting OpenGL by reshape window
 void Reshape(GLsizei Width, GLsizei Height){
@@ -113,11 +155,13 @@ void Reshape(GLsizei Width, GLsizei Height){
 void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(0.0, 0.0, -6.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0);
+  gluLookAt(0.0, 0.0, -6.0,
+            0.0, 0.0, 1.0,
+            0.0, 1.0, 0.0);
 
   // painting world
   glPushMatrix();
-  glScalef(0.05, 0.05, 0.0);
+  glScalef(0.07, 0.07, 0.0);
   int loop_col;
   int loop_row;
   int tile_get;
@@ -126,7 +170,7 @@ void Draw(void){
       tile_get = load_tiles[0].tile_id [loop_col] [loop_row];
       glBindTexture(GL_TEXTURE_2D, tiles_tex[tile_get]);
       glBegin(GL_QUADS);
-        glNormal3f(0.0, 0.0, 1.0);
+        glNormal3f(0.0, 0.0, -1.0);
         glTexCoord2f(0.0, 0.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col), 0.0);
         glTexCoord2f(1.0, 0.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col), 0.0);
         glTexCoord2f(1.0, 1.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
@@ -163,7 +207,7 @@ void Keyboard(unsigned char key, int x, int y){
   switch (key){
     // escape
     case 27:
-      glDeleteTextures(1, &tiles_tex[0]);
+      clearTextures();
       glutDestroyWindow(wnd);
     break;
     case 'g':
@@ -185,25 +229,8 @@ int main(int argc, char *argv[]){
   glutInitWindowSize(1920, 1080);
   wnd = glutCreateWindow("Evolution 0.0.0");
 
-  // create array of textures
-  glGenTextures(2, &tiles_tex[0]);
-  // getting data textures of tiles
-  LoadTexture("grass.bmp");
-  // loading textures into memory
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[0]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-
-  LoadTexture("stone.bmp");
-  // texture with linear filter
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[1]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-
-  // enabling textures
-  glEnable(GL_TEXTURE_2D);
+  // load Textures
+  LoadTextures();
 
   // loading world
   load_tiles[0] = LoadWorld("zone_00");
@@ -225,6 +252,6 @@ int main(int argc, char *argv[]){
   // processing events of window
   glutMainLoop();
   // clear textures
-  glDeleteTextures(1, &tiles_tex[0]);
+  clearTextures();
   return 0;
 }
