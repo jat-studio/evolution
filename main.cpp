@@ -2,12 +2,13 @@
 #include <IL/il.h>
 #include <IL/ilu.h>
 
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 
 #include "worldgen.h"
 
-int wnd;            // id GLwindow
+unsigned short int wnd;            // id GLwindow
 
 GLuint tiles_tex[2];    // index texture of tiles
 
@@ -30,6 +31,7 @@ long t, dt;
 char fps_str[50];
 
 tag_tiles load_tiles[num_zones];
+std::string str_seed, int_seed;
 
 // loading texture by filename
 void LoadTextureImage(const char* texName){
@@ -37,18 +39,7 @@ void LoadTextureImage(const char* texName){
   ilInit();
   iluInit();
   // loading texture
-  char ext[5] = "";
-  ext[0] = texName[strlen(texName) - 4];
-  ext[1] = texName[strlen(texName) - 3];
-  ext[2] = texName[strlen(texName) - 2];
-  ext[3] = texName[strlen(texName) - 1];
-  ext[4] = NULL;
-  if (strcmp(ext, ".bmp") == 0){
-    ilLoad(IL_BMP, texName);
-  }
-  if (strcmp(ext, ".tga") == 0){
-    ilLoad(IL_TGA, texName);
-  }
+  ilLoad(IL_TYPE_UNKNOWN, texName);
   // processing of errors
   int err = ilGetError();
   if (err != IL_NO_ERROR){
@@ -82,31 +73,28 @@ void LoadTextures(void){
   glGenTextures(3, &tiles_tex[0]);
 
   // getting data textures of tiles
-  LoadTextureImage("grass.bmp");
+  LoadTextureImage("grass.png");
   // loading textures into memory
   glBindTexture(GL_TEXTURE_2D, tiles_tex[0]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-  free(data_img);
 
   // getting data textures of tiles
-  LoadTextureImage("stone.bmp");
+  LoadTextureImage("stone.png");
   // texture with linear filter
   glBindTexture(GL_TEXTURE_2D, tiles_tex[1]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-  free(data_img);
 
   // getting data textures of tiles
-  LoadTextureImage("water.bmp");
+  LoadTextureImage("water.png");
   // texture with linear filter
   glBindTexture(GL_TEXTURE_2D, tiles_tex[2]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-  free(data_img);
 
   // enabling textures
   glEnable(GL_TEXTURE_2D);
@@ -114,7 +102,7 @@ void LoadTextures(void){
 
 // deleting textures
 void clearTextures(void){
-  glDeleteTextures(2, &tiles_tex[0]);
+  glDeleteTextures(3, &tiles_tex[0]);
 }
 
 // enter to ortho mode
@@ -151,6 +139,30 @@ void Reshape(GLsizei Width, GLsizei Height){
   glMatrixMode(GL_MODELVIEW);
 }
 
+//drawing chunk
+void DrawChunk(unsigned short int index, float x, float y){
+  unsigned short int loop_col, loop_row, tile_get;
+
+  glPushMatrix();
+  glTranslatef(x * size_zone, y * size_zone, 0.0);
+  for (loop_col = 0; loop_col < size_zone; loop_col++){
+    for (loop_row = 0; loop_row < size_zone; loop_row++){
+      tile_get = load_tiles[index].tile_id [loop_col] [loop_row];
+
+      glBindTexture(GL_TEXTURE_2D, tiles_tex[tile_get]);
+
+      glBegin(GL_QUADS);
+        glNormal3f(0.0, 0.0, -1.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col), 0.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col), 0.0);
+      glEnd();
+    }
+  }
+  glPopMatrix();
+}
+
 // painting Scene
 void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT);
@@ -160,25 +172,17 @@ void Draw(void){
             0.0, 1.0, 0.0);
 
   // painting world
-  glPushMatrix();
   glScalef(0.07, 0.07, 0.0);
-  int loop_col;
-  int loop_row;
-  int tile_get;
-  for (loop_col = 0; loop_col < size_zone; loop_col++){
-    for (loop_row = 0; loop_row < size_zone; loop_row++){
-      tile_get = load_tiles[0].tile_id [loop_col] [loop_row];
-      glBindTexture(GL_TEXTURE_2D, tiles_tex[tile_get]);
-      glBegin(GL_QUADS);
-        glNormal3f(0.0, 0.0, -1.0);
-        glTexCoord2f(0.0, 0.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col), 0.0);
-        glTexCoord2f(1.0, 0.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col), 0.0);
-        glTexCoord2f(1.0, 1.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
-        glTexCoord2f(0.0, 1.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
-      glEnd();
-    }
-  }
-  glPopMatrix();
+
+  DrawChunk(0, 0.0, 0.0);
+  DrawChunk(1, 0.0, 1.0);
+  DrawChunk(2, -1.0, 1.0);
+  DrawChunk(3, -1.0, 0.0);
+  DrawChunk(4, -1.0, -1.0);
+  DrawChunk(5, 0.0, -1.0);
+  DrawChunk(6, 1.0, -1.0);
+  DrawChunk(7, 1.0, 0.0);
+  DrawChunk(8, 1.0, 1.0);
 
   // calculating fps
   fps++;
@@ -210,18 +214,29 @@ void Keyboard(unsigned char key, int x, int y){
       clearTextures();
       glutDestroyWindow(wnd);
     break;
-    case 'g':
-      remove("zone_00");
-      GenerateWorld("zone_00");
-      load_tiles[0] = LoadWorld("zone_00");
-    break;
   }
 }
 
 void Idle(void){
 }
 
+std::string StrToInt(std::string str){
+  unsigned short int length = str.length();
+  char buffer[3];
+  std::string str_out;
+  for (unsigned short int i = 0; i < length; i++){
+    sprintf(buffer,"%d", (int)str[i]);
+    str_out += buffer;
+  }
+  return str_out;
+}
+
 int main(int argc, char *argv[]){
+  // getting seed
+  // loading world
+  std::cout << "Enter seed:";
+  std::cin >> str_seed;
+
   // initializing and create window GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
@@ -229,11 +244,20 @@ int main(int argc, char *argv[]){
   glutInitWindowSize(1920, 1080);
   wnd = glutCreateWindow("Evolution 0.0.0");
 
+  // loading world
+  int_seed = StrToInt(str_seed);
+  load_tiles[0] = LoadChunk(int_seed, "4848");
+  load_tiles[1] = LoadChunk(int_seed, "4849");
+  load_tiles[2] = LoadChunk(int_seed, "4949");
+  load_tiles[3] = LoadChunk(int_seed, "4948");
+  load_tiles[4] = LoadChunk(int_seed, "494549");
+  load_tiles[5] = LoadChunk(int_seed, "484549");
+  load_tiles[6] = LoadChunk(int_seed, "45494549");
+  load_tiles[7] = LoadChunk(int_seed, "454948");
+  load_tiles[8] = LoadChunk(int_seed, "454949");
+
   // load Textures
   LoadTextures();
-
-  // loading world
-  load_tiles[0] = LoadWorld("zone_00");
 
   // defining events of window
   glutDisplayFunc(Draw);
@@ -241,7 +265,6 @@ int main(int argc, char *argv[]){
   glutIdleFunc(Draw);
   glutKeyboardFunc(Keyboard);
 
-  // init GL
   // fon color
   glClearColor(0.5, 0.5, 0.5, 0.0);
   // smoothing paint of color
