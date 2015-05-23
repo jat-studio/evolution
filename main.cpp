@@ -30,8 +30,13 @@ int fps;
 long t, dt;
 char fps_str[50];
 
+// parameters for load and generate world with seed
 tag_tiles load_tiles[num_zones];
 std::string str_seed, int_seed;
+
+// parameters for moving camera
+float xpos = 0.0;
+float ypos = 0.0;
 
 // loading texture by filename
 void LoadTextureImage(const char* texName){
@@ -167,7 +172,7 @@ void DrawChunk(unsigned short int index, float x, float y){
 void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(0.0, 0.0, -6.0,
+  gluLookAt(xpos, ypos, -6.0,
             0.0, 0.0, 1.0,
             0.0, 1.0, 0.0);
 
@@ -213,6 +218,24 @@ void Keyboard(unsigned char key, int x, int y){
     case 27:
       clearTextures();
       glutDestroyWindow(wnd);
+    break;
+  }
+}
+
+// processing keys
+void ExtKeyboard(int key, int x, int y){
+  switch (key){
+    case GLUT_KEY_LEFT:
+      xpos--;
+    break;
+    case GLUT_KEY_RIGHT:
+      xpos++;
+    break;
+    case GLUT_KEY_UP:
+      ypos++;
+    break;
+    case GLUT_KEY_DOWN:
+      ypos--;
     break;
   }
 }
@@ -264,6 +287,7 @@ int main(int argc, char *argv[]){
   glutReshapeFunc(Reshape);
   glutIdleFunc(Draw);
   glutKeyboardFunc(Keyboard);
+  glutSpecialFunc(ExtKeyboard);
 
   // fon color
   glClearColor(0.5, 0.5, 0.5, 0.0);

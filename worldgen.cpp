@@ -77,8 +77,8 @@ tag_tiles LoadChunk(std::string seed, std::string coords){
       if (percent > 90){
         tiles[0].tile_id [i] [j] = 1;
       }
-      // 20 % chance of water
-      if ((percent > 70) && (percent < 90)){
+      // 5 % chance of water
+      if ((percent > 85) && (percent < 90)){
         tiles[0].tile_id [i] [j] = 2;
       }
     }
