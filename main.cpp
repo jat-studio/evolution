@@ -10,7 +10,8 @@
 
 unsigned short int wnd;            // id GLwindow
 
-GLuint tiles_tex[2];    // index texture of tiles
+const unsigned short int count_tex = 4; // count of textures
+GLuint tiles_tex[count_tex - 1];    // index texture of tiles
 
 // parameters of image
 int width;
@@ -19,16 +20,10 @@ int bpp;
 unsigned int type;
 unsigned char* data_img;
 
-bool    light = false;      // lights on or off
-bool    blend = false;      // blending on or off
-GLfloat LightAmbient[] = {0.5, 0.5, 0.5, 1.0}; // array of ambient light
-GLfloat LightDiffuse[] = {1.0, 1.0, 1.0, 1.0}; // array of diffuse light
-GLfloat LightPosition[] = {0.5, 0.5, 0.5, 1.0}; // coordinates of light source
-
 // fps drawing
 int fps;
 long t, dt;
-char fps_str[50];
+std::string fps_str;
 
 // parameters for load and generate world with seed
 tag_tiles load_tiles[num_zones];
@@ -75,7 +70,7 @@ void LoadTextureImage(const char* texName){
 // loading textures
 void LoadTextures(void){
   // create array of textures
-  glGenTextures(3, &tiles_tex[0]);
+  glGenTextures(count_tex, &tiles_tex[0]);
 
   // getting data textures of tiles
   LoadTextureImage("grass.png");
@@ -101,13 +96,21 @@ void LoadTextures(void){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
 
+  // getting data textures of tiles
+  LoadTextureImage("player.tga");
+  // texture with linear filter
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[3]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+
   // enabling textures
   glEnable(GL_TEXTURE_2D);
 }
 
 // deleting textures
 void clearTextures(void){
-  glDeleteTextures(3, &tiles_tex[0]);
+  glDeleteTextures(count_tex, &tiles_tex[0]);
 }
 
 // enter to ortho mode
@@ -127,18 +130,23 @@ void restorePerspectiveProjection(void){
 }
 
 // output string
-void DrawStaticString(float x, float y, float z, void *font, char *string){
-  char *c;
+void DrawStaticString(float x, float y, float z, void *font, std::string input){
   glRasterPos3f(x, y, z);
-  for (c = string; *c != '\0'; c++){
-    glutBitmapCharacter(font, *c);
-  }
+  glutBitmapCharacter(font, input[0]);
+  glutBitmapCharacter(font, input[1]);
+  glutBitmapCharacter(font, input[2]);
+  glutBitmapCharacter(font, input[3]);
+  glutBitmapCharacter(font, input[4]);
+  glutBitmapCharacter(font, input[5]);
+  glutBitmapCharacter(font, input[6]);
 }
 
 // repainting OpenGL by reshape window
 void Reshape(GLsizei Width, GLsizei Height){
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
   glViewport(0, 0, Width, Height);
   gluPerspective(45.0, (GLfloat)Width/(GLfloat)Height, 0.1, 100.0);
   glMatrixMode(GL_MODELVIEW);
@@ -168,6 +176,21 @@ void DrawChunk(unsigned short int index, float x, float y){
   glPopMatrix();
 }
 
+//drawing chunk
+void DrawPlayer(void){
+  glPushMatrix();
+  glTranslatef((xpos / scale), (ypos / scale), 0.0);
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[3]);
+  glBegin(GL_QUADS);
+    glNormal3f(0.0, 0.0, -1.0);
+    glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 1.0, -0.01);
+    glTexCoord2f(1.0, 0.0); glVertex3f(-1.0, 1.0, -0.01);
+    glTexCoord2f(1.0, 1.0); glVertex3f(-1.0, 0.0, -0.01);
+    glTexCoord2f(0.0, 1.0); glVertex3f(0.0, 0.0, -0.01);
+  glEnd();
+  glPopMatrix();
+}
+
 // painting Scene
 void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT);
@@ -189,11 +212,13 @@ void Draw(void){
   DrawChunk(7, 1.0, 0.0);
   DrawChunk(8, 1.0, 1.0);
 
+  DrawPlayer();
+
   // calculating fps
   fps++;
   t = glutGet(GLUT_ELAPSED_TIME);
   if (t - dt > 1000){
-    sprintf(fps_str, "FPS:%4.2f", fps * 1000.0 / (t - dt));
+    fps_str = "FPS:" + std::to_string(fps * 1000.0 / (t - dt));
     dt = t;
     fps = 0;
   }
@@ -204,6 +229,7 @@ void Draw(void){
   glPushMatrix();
   glLoadIdentity();
   DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, fps_str);
+
   glPopMatrix();
   restorePerspectiveProjection();
   glColor3f(1.0, 1.0, 1.0);
