@@ -173,11 +173,11 @@ void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
   gluLookAt(xpos, ypos, -6.0,
-            0.0, 0.0, 1.0,
+            xpos, ypos, 1.0,
             0.0, 1.0, 0.0);
 
   // painting world
-  glScalef(0.07, 0.07, 0.0);
+  glScalef(scale, scale, 0.0);
 
   DrawChunk(0, 0.0, 0.0);
   DrawChunk(1, 0.0, 1.0);
@@ -226,16 +226,16 @@ void Keyboard(unsigned char key, int x, int y){
 void ExtKeyboard(int key, int x, int y){
   switch (key){
     case GLUT_KEY_LEFT:
-      xpos--;
+      xpos += scale;
     break;
     case GLUT_KEY_RIGHT:
-      xpos++;
+      xpos -= scale;
     break;
     case GLUT_KEY_UP:
-      ypos++;
+      ypos += scale;
     break;
     case GLUT_KEY_DOWN:
-      ypos--;
+      ypos -=scale;
     break;
   }
 }

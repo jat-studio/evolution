@@ -3,6 +3,7 @@
 
 const unsigned short int size_zone = 64;
 const unsigned short int num_zones = 9;
+const float scale = 0.07;
 
 const unsigned int PRIME32_1 = 2654435761;
 const unsigned int PRIME32_2 = 2246822519;
