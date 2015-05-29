@@ -33,6 +33,25 @@ std::string str_seed, int_seed;
 float xpos = 0.0;
 float ypos = 0.0;
 
+// structure for id chunks
+struct tag_id_chunks{
+  unsigned short int idx;
+  unsigned short int idy;
+  unsigned short int idz;
+};
+tag_id_chunks id_chunks;
+
+// structure for coordinates of chunks
+struct tag_coords_chunks{
+  int x0;
+  int y0;
+  int x1;
+  int y1;
+  int x2;
+  int y2;
+};
+tag_coords_chunks coords_chunks;
+
 // loading texture by filename
 void LoadTextureImage(const char* texName){
   // initializing il and ilu library
@@ -225,14 +244,22 @@ void Draw(void){
 
   // painting text on 2d mode
   glColor3f(0.0, 0.0, 0.0);
+  glDisable(GL_BLEND);
   setOrthographicProjection();
   glPushMatrix();
   glLoadIdentity();
   DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, fps_str);
 
+  DrawStaticString(-0.99, 0.91, 0.0, GLUT_BITMAP_TIMES_ROMAN_24,
+                   std::to_string(((int)((xpos / scale) - 0.1)) / 64));
+
+  DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24,
+                   std::to_string((int)((xpos / scale) - 0.1)));
+
   glPopMatrix();
   restorePerspectiveProjection();
   glColor3f(1.0, 1.0, 1.0);
+  glEnable(GL_BLEND);
 
   glutSwapBuffers();
 }
@@ -248,27 +275,7 @@ void Keyboard(unsigned char key, int x, int y){
   }
 }
 
-// processing keys
-void ExtKeyboard(int key, int x, int y){
-  switch (key){
-    case GLUT_KEY_LEFT:
-      xpos += scale;
-    break;
-    case GLUT_KEY_RIGHT:
-      xpos -= scale;
-    break;
-    case GLUT_KEY_UP:
-      ypos += scale;
-    break;
-    case GLUT_KEY_DOWN:
-      ypos -=scale;
-    break;
-  }
-}
-
-void Idle(void){
-}
-
+// string >> char_codes >> string
 std::string StrToInt(std::string str){
   unsigned short int length = str.length();
   char buffer[3];
@@ -280,6 +287,53 @@ std::string StrToInt(std::string str){
   return str_out;
 }
 
+// loading three chunks
+void LoadChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks){
+  load_tiles[id_chunks.idx] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks.x0)) + StrToInt(std::to_string(coords_chunks.y0)));
+  load_tiles[id_chunks.idy] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks.x1)) + StrToInt(std::to_string(coords_chunks.y1)));
+  load_tiles[id_chunks.idz] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks.x2)) + StrToInt(std::to_string(coords_chunks.y2)));
+}
+
+// processing keys
+void ExtKeyboard(int key, int x, int y){
+  switch (key){
+    case GLUT_KEY_LEFT:
+      xpos += scale;
+      if (((int)(xpos / scale) % size_zone) == 32){
+        std::cout << "load!\n";
+        /*float coeffx = 0;
+        float coeffy = 0;
+        if (xpos > 0)
+          coeffx = 0.1;
+        else
+          coeffx = -0.1;
+        if (ypos > 0)
+          coeffy = 0.1;
+        else
+          coeffy = -0.1;
+        int x0 = ((int)((xpos / scale) + coeffx)) / size_zone;
+        int y0 = ((int)((ypos / scale) + coeffy)) / size_zone;
+        LoadChunks({6, 7, 8},
+                   {x0 + 1, y0 - 1,
+                    x0 + 1, y0,
+                    x0 + 1, y0 + 1});*/
+      }
+    break;
+    case GLUT_KEY_RIGHT:
+      xpos -= scale;
+    break;
+    case GLUT_KEY_UP:
+      ypos += scale;
+    break;
+    case GLUT_KEY_DOWN:
+      ypos -= scale;
+    break;
+  }
+}
+
+void Idle(void){
+}
+
 int main(int argc, char *argv[]){
   // getting seed
   // loading world
@@ -288,22 +342,25 @@ int main(int argc, char *argv[]){
 
   // initializing and create window GLUT
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_MULTISAMPLE);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutInitWindowPosition(0, 0);
   glutInitWindowSize(1920, 1080);
   wnd = glutCreateWindow("Evolution 0.0.0");
 
   // loading world
   int_seed = StrToInt(str_seed);
-  load_tiles[0] = LoadChunk(int_seed, "4848");
-  load_tiles[1] = LoadChunk(int_seed, "4849");
-  load_tiles[2] = LoadChunk(int_seed, "4949");
-  load_tiles[3] = LoadChunk(int_seed, "4948");
-  load_tiles[4] = LoadChunk(int_seed, "494549");
-  load_tiles[5] = LoadChunk(int_seed, "484549");
-  load_tiles[6] = LoadChunk(int_seed, "45494549");
-  load_tiles[7] = LoadChunk(int_seed, "454948");
-  load_tiles[8] = LoadChunk(int_seed, "454949");
+  LoadChunks({0, 1, 2},
+             {0, 0,
+              0, 1,
+              1, 1});
+  LoadChunks({3, 4, 5},
+             {1, 0,
+              1, -1,
+              0, -1});
+  LoadChunks({6, 7, 8},
+             {-1, -1,
+              -1, 0,
+              -1, 1});
 
   // load Textures
   LoadTextures();
