@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <array>
 
 #include "worldgen.h"
 
@@ -35,22 +36,18 @@ float ypos = 0.0;
 
 // structure for id chunks
 struct tag_id_chunks{
-  unsigned short int idx;
-  unsigned short int idy;
-  unsigned short int idz;
+  unsigned short int ida;
+  unsigned short int idb;
+  unsigned short int idc;
 };
 tag_id_chunks id_chunks;
 
-// structure for coordinates of chunks
+// structure for int coordinates of chunks
 struct tag_coords_chunks{
-  int x0;
-  int y0;
-  int x1;
-  int y1;
-  int x2;
-  int y2;
+  int x;
+  int y;
 };
-tag_coords_chunks coords_chunks;
+tag_coords_chunks coords_chunks[9];
 
 // loading texture by filename
 void LoadTextureImage(const char* texName){
@@ -172,7 +169,7 @@ void Reshape(GLsizei Width, GLsizei Height){
 }
 
 //drawing chunk
-void DrawChunk(unsigned short int index, float x, float y){
+void DrawChunk(unsigned short int index, int x, int y){
   unsigned short int loop_col, loop_row, tile_get;
 
   glPushMatrix();
@@ -195,7 +192,7 @@ void DrawChunk(unsigned short int index, float x, float y){
   glPopMatrix();
 }
 
-//drawing chunk
+//drawing player
 void DrawPlayer(void){
   glPushMatrix();
   glTranslatef((xpos / scale), (ypos / scale), 0.0);
@@ -221,15 +218,15 @@ void Draw(void){
   // painting world
   glScalef(scale, scale, 0.0);
 
-  DrawChunk(0, 0.0, 0.0);
-  DrawChunk(1, 0.0, 1.0);
-  DrawChunk(2, -1.0, 1.0);
-  DrawChunk(3, -1.0, 0.0);
-  DrawChunk(4, -1.0, -1.0);
-  DrawChunk(5, 0.0, -1.0);
-  DrawChunk(6, 1.0, -1.0);
-  DrawChunk(7, 1.0, 0.0);
-  DrawChunk(8, 1.0, 1.0);
+  DrawChunk(0, coords_chunks[0].x, coords_chunks[0].y);
+  DrawChunk(1, coords_chunks[1].x, coords_chunks[1].y);
+  DrawChunk(2, coords_chunks[2].x, coords_chunks[2].y);
+  DrawChunk(3, coords_chunks[3].x, coords_chunks[3].y);
+  DrawChunk(4, coords_chunks[4].x, coords_chunks[4].y);
+  DrawChunk(5, coords_chunks[5].x, coords_chunks[5].y);
+  DrawChunk(6, coords_chunks[6].x, coords_chunks[6].y);
+  DrawChunk(7, coords_chunks[7].x, coords_chunks[7].y);
+  DrawChunk(8, coords_chunks[8].x, coords_chunks[8].y);
 
   DrawPlayer();
 
@@ -264,17 +261,6 @@ void Draw(void){
   glutSwapBuffers();
 }
 
-// processing keys
-void Keyboard(unsigned char key, int x, int y){
-  switch (key){
-    // escape
-    case 27:
-      clearTextures();
-      glutDestroyWindow(wnd);
-    break;
-  }
-}
-
 // string >> char_codes >> string
 std::string StrToInt(std::string str){
   unsigned short int length = str.length();
@@ -288,10 +274,86 @@ std::string StrToInt(std::string str){
 }
 
 // loading three chunks
-void LoadChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks){
-  load_tiles[id_chunks.idx] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks.x0)) + StrToInt(std::to_string(coords_chunks.y0)));
-  load_tiles[id_chunks.idy] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks.x1)) + StrToInt(std::to_string(coords_chunks.y1)));
-  load_tiles[id_chunks.idz] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks.x2)) + StrToInt(std::to_string(coords_chunks.y2)));
+void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
+  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x)) + StrToInt(std::to_string(coords_chunks_A.y)));
+  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x)) + StrToInt(std::to_string(coords_chunks_B.y)));
+  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x)) + StrToInt(std::to_string(coords_chunks_C.y)));
+}
+
+// moving and generate chunks
+// parameters: horizontal moving or not and increase or decrease coordinates
+void MoveChunks(bool horizontal, bool increase){
+  // redefining chunk id and coordinates
+  std::array<unsigned short int, 9> id;
+  unsigned short int coeff = 0;
+  if (horizontal){
+    if (increase){
+      // left
+      id = {2, 3, 4, 1, 0, 5, 8, 7, 6};
+      coeff = 1;
+    }
+    else{
+      // right
+      id = {8, 7, 6, 1, 0, 5, 2, 3, 4};
+      coeff = -1;
+    }
+    coords_chunks[0].x += coeff;
+    coords_chunks[1].x += coeff;
+    coords_chunks[2].x += coeff;
+    coords_chunks[3].x += coeff;
+    coords_chunks[4].x += coeff;
+    coords_chunks[5].x += coeff;
+    coords_chunks[6].x += coeff;
+    coords_chunks[7].x += coeff;
+    coords_chunks[8].x += coeff;
+  }
+  else{
+    if (increase){
+      // up
+      id = {6, 5, 4, 7, 0, 3, 8, 1, 2};
+      coeff = 1;
+    }
+    else{
+      // down
+      id = {8, 1, 2, 7, 0, 3, 6, 5, 4};
+      coeff = -1;
+    }
+    coords_chunks[0].y += coeff;
+    coords_chunks[1].y += coeff;
+    coords_chunks[2].y += coeff;
+    coords_chunks[3].y += coeff;
+    coords_chunks[4].y += coeff;
+    coords_chunks[5].y += coeff;
+    coords_chunks[6].y += coeff;
+    coords_chunks[7].y += coeff;
+    coords_chunks[8].y += coeff;
+  }
+
+  // redefining content of chunks
+  load_tiles[id[0]] = load_tiles[id[3]];
+  load_tiles[id[1]] = load_tiles[id[4]];
+  load_tiles[id[2]] = load_tiles[id[5]];
+
+  load_tiles[id[3]] = load_tiles[id[6]];
+  load_tiles[id[4]] = load_tiles[id[7]];
+  load_tiles[id[5]] = load_tiles[id[8]];
+
+  // generate three new chunks
+  LoadThreeChunks({id[6], id[7], id[8]},
+                  {coords_chunks[id[6]].x, coords_chunks[id[6]].y},
+                  {coords_chunks[id[7]].x, coords_chunks[id[7]].y},
+                  {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
+}
+
+// processing keys
+void Keyboard(unsigned char key, int x, int y){
+  switch (key){
+    // escape
+    case 27:
+      clearTextures();
+      glutDestroyWindow(wnd);
+    break;
+  }
 }
 
 // processing keys
@@ -300,23 +362,7 @@ void ExtKeyboard(int key, int x, int y){
     case GLUT_KEY_LEFT:
       xpos += scale;
       if (((int)(xpos / scale) % size_zone) == 32){
-        std::cout << "load!\n";
-        /*float coeffx = 0;
-        float coeffy = 0;
-        if (xpos > 0)
-          coeffx = 0.1;
-        else
-          coeffx = -0.1;
-        if (ypos > 0)
-          coeffy = 0.1;
-        else
-          coeffy = -0.1;
-        int x0 = ((int)((xpos / scale) + coeffx)) / size_zone;
-        int y0 = ((int)((ypos / scale) + coeffy)) / size_zone;
-        LoadChunks({6, 7, 8},
-                   {x0 + 1, y0 - 1,
-                    x0 + 1, y0,
-                    x0 + 1, y0 + 1});*/
+        MoveChunks(true, true);
       }
     break;
     case GLUT_KEY_RIGHT:
@@ -347,20 +393,31 @@ int main(int argc, char *argv[]){
   glutInitWindowSize(1920, 1080);
   wnd = glutCreateWindow("Evolution 0.0.0");
 
+  // initializing coordinates of chunks
+  coords_chunks[0].x = 0;  coords_chunks[0].y = 0;
+  coords_chunks[1].x = 0;  coords_chunks[1].y = 1;
+  coords_chunks[2].x = -1; coords_chunks[2].y = 1;
+  coords_chunks[3].x = -1; coords_chunks[3].y = 0;
+  coords_chunks[4].x = -1; coords_chunks[4].y = -1;
+  coords_chunks[5].x = 0;  coords_chunks[5].y = -1;
+  coords_chunks[6].x = 1;  coords_chunks[6].y = -1;
+  coords_chunks[7].x = 1;  coords_chunks[7].y = 0;
+  coords_chunks[8].x = 1;  coords_chunks[8].y = 1;
+
   // loading world
   int_seed = StrToInt(str_seed);
-  LoadChunks({0, 1, 2},
-             {0, 0,
-              0, 1,
-              1, 1});
-  LoadChunks({3, 4, 5},
-             {1, 0,
-              1, -1,
-              0, -1});
-  LoadChunks({6, 7, 8},
-             {-1, -1,
-              -1, 0,
-              -1, 1});
+  LoadThreeChunks({0, 1, 2},
+                  {0, 0},
+                  {0, 1},
+                  {1, 1});
+  LoadThreeChunks({3, 4, 5},
+                  {1, 0},
+                  {1, -1},
+                  {0, -1});
+  LoadThreeChunks({6, 7, 8},
+                  {-1, -1},
+                  {-1, 0},
+                  {-1, 1});
 
   // load Textures
   LoadTextures();

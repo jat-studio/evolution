@@ -9,28 +9,30 @@
 			<Collapse line="5" />
 			<Collapse line="9" />
 			<Collapse line="17" />
-			<Collapse line="64" />
 		</Folding>
 	</File>
 	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8655" topLine="135" />
+			<Cursor1 position="10888" topLine="79" />
 		</Cursor>
 		<Folding>
-			<Collapse line="36" />
-			<Collapse line="44" />
-			<Collapse line="55" />
-			<Collapse line="89" />
-			<Collapse line="130" />
-			<Collapse line="135" />
-			<Collapse line="144" />
-			<Collapse line="151" />
-			<Collapse line="163" />
-			<Collapse line="174" />
-			<Collapse line="198" />
-			<Collapse line="267" />
-			<Collapse line="278" />
-			<Collapse line="290" />
+			<Collapse line="37" />
+			<Collapse line="45" />
+			<Collapse line="52" />
+			<Collapse line="86" />
+			<Collapse line="127" />
+			<Collapse line="132" />
+			<Collapse line="141" />
+			<Collapse line="148" />
+			<Collapse line="160" />
+			<Collapse line="171" />
+			<Collapse line="195" />
+			<Collapse line="210" />
+			<Collapse line="264" />
+			<Collapse line="276" />
+			<Collapse line="284" />
+			<Collapse line="348" />
+			<Collapse line="382" />
 		</Folding>
 	</File>
 	<File name="worldgen.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
