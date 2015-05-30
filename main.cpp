@@ -30,9 +30,13 @@ std::string fps_str;
 tag_tiles load_tiles[num_zones];
 std::string str_seed, int_seed;
 
-// parameters for moving camera
-float xpos = 0.0;
-float ypos = 0.0;
+// coordinates of camera
+float xpos_cam = 0.0;
+float ypos_cam = 0.0;
+
+// coordinates of tiles
+int xpos;
+int ypos;
 
 // structure for id chunks
 struct tag_id_chunks{
@@ -148,13 +152,10 @@ void restorePerspectiveProjection(void){
 // output string
 void DrawStaticString(float x, float y, float z, void *font, std::string input){
   glRasterPos3f(x, y, z);
-  glutBitmapCharacter(font, input[0]);
-  glutBitmapCharacter(font, input[1]);
-  glutBitmapCharacter(font, input[2]);
-  glutBitmapCharacter(font, input[3]);
-  glutBitmapCharacter(font, input[4]);
-  glutBitmapCharacter(font, input[5]);
-  glutBitmapCharacter(font, input[6]);
+  unsigned short int len = input.length();
+  for(unsigned short int i = 0; i < len; i++){
+    glutBitmapCharacter(font, input[i]);
+  }
 }
 
 // repainting OpenGL by reshape window
@@ -195,7 +196,7 @@ void DrawChunk(unsigned short int index, int x, int y){
 //drawing player
 void DrawPlayer(void){
   glPushMatrix();
-  glTranslatef((xpos / scale), (ypos / scale), 0.0);
+  glTranslatef(xpos, ypos, 0.0);
   glBindTexture(GL_TEXTURE_2D, tiles_tex[3]);
   glBegin(GL_QUADS);
     glNormal3f(0.0, 0.0, -1.0);
@@ -211,8 +212,8 @@ void DrawPlayer(void){
 void Draw(void){
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(xpos, ypos, -6.0,
-            xpos, ypos, 1.0,
+  gluLookAt(xpos_cam, ypos_cam, -6.0,
+            xpos_cam, ypos_cam, 1.0,
             0.0, 1.0, 0.0);
 
   // painting world
@@ -234,7 +235,7 @@ void Draw(void){
   fps++;
   t = glutGet(GLUT_ELAPSED_TIME);
   if (t - dt > 1000){
-    fps_str = "FPS:" + std::to_string(fps * 1000.0 / (t - dt));
+    fps_str = "FPS:" + std::to_string((int)(fps * 1000.0 / (t - dt)));
     dt = t;
     fps = 0;
   }
@@ -245,13 +246,16 @@ void Draw(void){
   setOrthographicProjection();
   glPushMatrix();
   glLoadIdentity();
+  // drawing fps
   DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, fps_str);
 
-  DrawStaticString(-0.99, 0.91, 0.0, GLUT_BITMAP_TIMES_ROMAN_24,
-                   std::to_string(((int)((xpos / scale) - 0.1)) / 64));
-
-  DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24,
-                   std::to_string((int)((xpos / scale) - 0.1)));
+  // drawing coordinates
+  std::string print_str;
+  print_str = "X: ";
+  print_str += std::to_string(xpos);
+  print_str += "; Y: ";
+  print_str += std::to_string(ypos);
+  DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str);
 
   glPopMatrix();
   restorePerspectiveProjection();
@@ -360,19 +364,23 @@ void Keyboard(unsigned char key, int x, int y){
 void ExtKeyboard(int key, int x, int y){
   switch (key){
     case GLUT_KEY_LEFT:
-      xpos += scale;
-      if (((int)(xpos / scale) % size_zone) == 32){
+      xpos_cam += scale;
+      xpos++;
+      /*if (((int)(xpos / scale) % size_zone) == 32){
         MoveChunks(true, true);
-      }
+      }*/
     break;
     case GLUT_KEY_RIGHT:
-      xpos -= scale;
+      xpos_cam -= scale;
+      xpos--;
     break;
     case GLUT_KEY_UP:
-      ypos += scale;
+      ypos_cam += scale;
+      ypos++;
     break;
     case GLUT_KEY_DOWN:
-      ypos -= scale;
+      ypos_cam -= scale;
+      ypos--;
     break;
   }
 }
@@ -405,6 +413,8 @@ int main(int argc, char *argv[]){
   coords_chunks[8].x = 1;  coords_chunks[8].y = 1;
 
   // loading world
+  xpos = 0;
+  ypos = 0;
   int_seed = StrToInt(str_seed);
   LoadThreeChunks({0, 1, 2},
                   {0, 0},
