@@ -158,17 +158,6 @@ void DrawStaticString(float x, float y, float z, void *font, std::string input){
   }
 }
 
-// repainting OpenGL by reshape window
-void Reshape(GLsizei Width, GLsizei Height){
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
-  glViewport(0, 0, Width, Height);
-  gluPerspective(45.0, (GLfloat)Width/(GLfloat)Height, 0.1, 100.0);
-  glMatrixMode(GL_MODELVIEW);
-}
-
 //drawing chunk
 void DrawChunk(unsigned short int index, int x, int y){
   unsigned short int loop_col, loop_row, tile_get;
@@ -183,10 +172,10 @@ void DrawChunk(unsigned short int index, int x, int y){
 
       glBegin(GL_QUADS);
         glNormal3f(0.0, 0.0, -1.0);
-        glTexCoord2f(0.0, 0.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
-        glTexCoord2f(1.0, 0.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
-        glTexCoord2f(1.0, 1.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col), 0.0);
-        glTexCoord2f(0.0, 1.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col), 0.0);
+        glTexCoord2f(0.0, 1.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
+        glTexCoord2f(1.0, 1.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col + 1), 0.0);
+        glTexCoord2f(1.0, 0.0); glVertex3f(((size_zone / 2) - loop_row - 1), (((-1 * size_zone) / 2) + loop_col + 2), 0.0);
+        glTexCoord2f(0.0, 0.0); glVertex3f(((size_zone / 2) - loop_row), (((-1 * size_zone) / 2) + loop_col + 2), 0.0);
       glEnd();
     }
   }
@@ -206,6 +195,119 @@ void DrawPlayer(void){
     glTexCoord2f(0.0, 1.0); glVertex3f(0.0, 0.0, -0.01);
   glEnd();
   glPopMatrix();
+}
+
+// string >> char_codes >> string
+std::string StrToInt(std::string str){
+  unsigned short int length = str.length();
+  char buffer[3];
+  std::string str_out;
+  for (unsigned short int i = 0; i < length; i++){
+    sprintf(buffer,"%d", (int)str[i]);
+    str_out += buffer;
+  }
+  return str_out;
+}
+
+// loading three chunks
+void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
+  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x)) + StrToInt(std::to_string(coords_chunks_A.y)));
+  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x)) + StrToInt(std::to_string(coords_chunks_B.y)));
+  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x)) + StrToInt(std::to_string(coords_chunks_C.y)));
+}
+
+// moving and generate chunks
+// parameters: horizontal moving or not and increase or decrease coordinates
+void MoveChunks(bool horizontal, bool increase){
+  // redefining chunk id and coordinates
+  std::array<unsigned short int, 9> id;
+  short int coeff = 0;
+  if (horizontal){
+    if (increase){
+      // left
+      id = {2, 3, 4, 1, 0, 5, 8, 7, 6};
+      coeff = 1;
+    }
+    else{
+      // right
+      id = {8, 7, 6, 1, 0, 5, 2, 3, 4};
+      coeff = -1;
+    }
+    coords_chunks[0].x = coords_chunks[0].x + coeff;
+    coords_chunks[1].x = coords_chunks[1].x + coeff;
+    coords_chunks[2].x = coords_chunks[2].x + coeff;
+    coords_chunks[3].x = coords_chunks[3].x + coeff;
+    coords_chunks[4].x = coords_chunks[4].x + coeff;
+    coords_chunks[5].x = coords_chunks[5].x + coeff;
+    coords_chunks[6].x = coords_chunks[6].x + coeff;
+    coords_chunks[7].x = coords_chunks[7].x + coeff;
+    coords_chunks[8].x = coords_chunks[8].x + coeff;
+  }
+  else{
+    if (increase){
+      // up
+      id = {6, 5, 4, 7, 0, 3, 8, 1, 2};
+      coeff = 1;
+    }
+    else{
+      // down
+      id = {8, 1, 2, 7, 0, 3, 6, 5, 4};
+      coeff = -1;
+    }
+    coords_chunks[0].y = coords_chunks[0].y + coeff;
+    coords_chunks[1].y = coords_chunks[1].y + coeff;
+    coords_chunks[2].y = coords_chunks[2].y + coeff;
+    coords_chunks[3].y = coords_chunks[3].y + coeff;
+    coords_chunks[4].y = coords_chunks[4].y + coeff;
+    coords_chunks[5].y = coords_chunks[5].y + coeff;
+    coords_chunks[6].y = coords_chunks[6].y + coeff;
+    coords_chunks[7].y = coords_chunks[7].y + coeff;
+    coords_chunks[8].y = coords_chunks[8].y + coeff;
+  }
+
+  // redefining content of chunks
+  load_tiles[id[0]] = load_tiles[id[3]];
+  load_tiles[id[1]] = load_tiles[id[4]];
+  load_tiles[id[2]] = load_tiles[id[5]];
+
+  load_tiles[id[3]] = load_tiles[id[6]];
+  load_tiles[id[4]] = load_tiles[id[7]];
+  load_tiles[id[5]] = load_tiles[id[8]];
+
+  // generate three new chunks
+  LoadThreeChunks({id[6], id[7], id[8]},
+                  {coords_chunks[id[6]].x, coords_chunks[id[6]].y},
+                  {coords_chunks[id[7]].x, coords_chunks[id[7]].y},
+                  {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
+}
+
+// calculating border current chunk
+int CalculateBorderChunk(bool horizontal){
+  int border;
+  if (horizontal){
+    border = xpos + (size_zone / 2);
+  }
+  else{
+    border = ypos + (size_zone / 2);
+  }
+  if (border > 0){
+    border = (((int)((border - 1) / size_zone)) * size_zone) + (size_zone / 2);
+  }
+  else{
+    border = ((((int)(border / size_zone)) * size_zone) - (size_zone / 2));
+  }
+  return border;
+}
+
+// repainting OpenGL by reshape window
+void Reshape(GLsizei Width, GLsizei Height){
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+  glViewport(0, 0, Width, Height);
+  gluPerspective(45.0, (GLfloat)Width/(GLfloat)Height, 0.1, 100.0);
+  glMatrixMode(GL_MODELVIEW);
 }
 
 // painting Scene
@@ -255,7 +357,7 @@ void Draw(void){
   print_str += std::to_string(xpos);
   print_str += "; Y: ";
   print_str += std::to_string(ypos);
-  DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str);
+  DrawStaticString(-0.99, 0.91, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str);
 
   glPopMatrix();
   restorePerspectiveProjection();
@@ -263,90 +365,6 @@ void Draw(void){
   glEnable(GL_BLEND);
 
   glutSwapBuffers();
-}
-
-// string >> char_codes >> string
-std::string StrToInt(std::string str){
-  unsigned short int length = str.length();
-  char buffer[3];
-  std::string str_out;
-  for (unsigned short int i = 0; i < length; i++){
-    sprintf(buffer,"%d", (int)str[i]);
-    str_out += buffer;
-  }
-  return str_out;
-}
-
-// loading three chunks
-void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
-  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x)) + StrToInt(std::to_string(coords_chunks_A.y)));
-  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x)) + StrToInt(std::to_string(coords_chunks_B.y)));
-  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x)) + StrToInt(std::to_string(coords_chunks_C.y)));
-}
-
-// moving and generate chunks
-// parameters: horizontal moving or not and increase or decrease coordinates
-void MoveChunks(bool horizontal, bool increase){
-  // redefining chunk id and coordinates
-  std::array<unsigned short int, 9> id;
-  unsigned short int coeff = 0;
-  if (horizontal){
-    if (increase){
-      // left
-      id = {2, 3, 4, 1, 0, 5, 8, 7, 6};
-      coeff = 1;
-    }
-    else{
-      // right
-      id = {8, 7, 6, 1, 0, 5, 2, 3, 4};
-      coeff = -1;
-    }
-    coords_chunks[0].x += coeff;
-    coords_chunks[1].x += coeff;
-    coords_chunks[2].x += coeff;
-    coords_chunks[3].x += coeff;
-    coords_chunks[4].x += coeff;
-    coords_chunks[5].x += coeff;
-    coords_chunks[6].x += coeff;
-    coords_chunks[7].x += coeff;
-    coords_chunks[8].x += coeff;
-  }
-  else{
-    if (increase){
-      // up
-      id = {6, 5, 4, 7, 0, 3, 8, 1, 2};
-      coeff = 1;
-    }
-    else{
-      // down
-      id = {8, 1, 2, 7, 0, 3, 6, 5, 4};
-      coeff = -1;
-    }
-    coords_chunks[0].y += coeff;
-    coords_chunks[1].y += coeff;
-    coords_chunks[2].y += coeff;
-    coords_chunks[3].y += coeff;
-    coords_chunks[4].y += coeff;
-    coords_chunks[5].y += coeff;
-    coords_chunks[6].y += coeff;
-    coords_chunks[7].y += coeff;
-    coords_chunks[8].y += coeff;
-  }
-
-  // redefining content of chunks
-  load_tiles[id[0]] = load_tiles[id[3]];
-  load_tiles[id[1]] = load_tiles[id[4]];
-  load_tiles[id[2]] = load_tiles[id[5]];
-
-  load_tiles[id[3]] = load_tiles[id[6]];
-  load_tiles[id[4]] = load_tiles[id[7]];
-  load_tiles[id[5]] = load_tiles[id[8]];
-
-  // generate three new chunks
-  LoadThreeChunks({id[6], id[7], id[8]},
-                  {coords_chunks[id[6]].x, coords_chunks[id[6]].y},
-                  {coords_chunks[id[7]].x, coords_chunks[id[7]].y},
-                  {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
 }
 
 // processing keys
@@ -366,21 +384,30 @@ void ExtKeyboard(int key, int x, int y){
     case GLUT_KEY_LEFT:
       xpos_cam += scale;
       xpos++;
-      /*if (((int)(xpos / scale) % size_zone) == 32){
+      if (xpos == CalculateBorderChunk(true)){
         MoveChunks(true, true);
-      }*/
+      }
     break;
     case GLUT_KEY_RIGHT:
       xpos_cam -= scale;
       xpos--;
+      if (xpos == CalculateBorderChunk(true)){
+        MoveChunks(true, false);
+      }
     break;
     case GLUT_KEY_UP:
       ypos_cam += scale;
       ypos++;
+      if (ypos == CalculateBorderChunk(false)){
+        MoveChunks(false, true);
+      }
     break;
     case GLUT_KEY_DOWN:
       ypos_cam -= scale;
       ypos--;
+      if (ypos == CalculateBorderChunk(false)){
+        MoveChunks(false, false);
+      }
     break;
   }
 }
