@@ -1,12 +1,15 @@
 #include <cstdlib>
 #include <iostream>
+#include <array>
 
 #include "worldgen.h"
 
+// function for calculating hash
 unsigned int RotateLeft(unsigned int value, int count){
   return (value << count) | (value >> (32 - count));
 }
 
+// function for calculating hash
 unsigned int CalcSubHash(unsigned int value, std::string buf, int index){
   unsigned int read_value = stoi(buf.substr(index, 4));
   value += read_value * PRIME32_2;
@@ -15,6 +18,7 @@ unsigned int CalcSubHash(unsigned int value, std::string buf, int index){
   return value;
 }
 
+// function for calculating hash
 unsigned int GetHash(std::string input){
   unsigned int seed = 0;
   unsigned int h32;
@@ -62,26 +66,60 @@ unsigned int GetHash(std::string input){
   return h32;
 }
 
-tag_tiles LoadChunk(std::string seed, std::string coords){
-  tag_tiles tiles[1];
+// generating ID Biomes
+tag_biomes LoadBiomes(std::string seed, std::string coords){
+  tag_biomes biomes_temp[1];
+  unsigned short int percent;
 
   seed += coords;
+  seed += "43";
   srand(GetHash(seed));
 
-  int percent;
-  for (unsigned short int i = 0; i < size_zone; i++){
-    for (unsigned short int j = 0; j < size_zone; j++){
-      percent = 1 + (rand() % 100);
-      tiles[0].tile_id [i] [j] = 0;
-      // 10 % chance of stone
-      if (percent > 90){
-        tiles[0].tile_id [i] [j] = 1;
-      }
-      // 1 % chance of water
-      if ((percent > 88) && (percent < 90)){
-        tiles[0].tile_id [i] [j] = 2;
+  for (unsigned short int i = 0; i < size_zone_biomes; i++){
+      for (unsigned short int j = 0; j < size_zone_biomes; j++){
+        percent = 1 + (rand() % 100);
+        biomes_temp[0].biome_id [i] [j] = 0;
+        // 10 % chance
+        if (percent > 90){
+          biomes_temp[0].biome_id [i] [j] = 1;
+        }
       }
     }
-  }
+  return biomes_temp[0];
+}
+
+// function for generate field started on left down point (x , y) and size of (xsize, ysize) going to right and up
+tag_tiles GenerateField(unsigned short int x, unsigned short int y, unsigned short int xsize, unsigned short int ysize, unsigned short int id_biome){
+  tag_tiles tiles_temp[1];
+  unsigned short int percent;
+  for (unsigned short int i = x; i < xsize; i++){
+      for (unsigned short int j = y; j < ysize; j++){
+        percent = 1 + (rand() % 100);
+        tiles_temp[0].tile_id [i] [j] = 0;
+        // 10 % chance
+        if (percent > 90){
+          tiles_temp[0].tile_id [i] [j] = 1;
+        }
+        if (id_biome == 1){
+          tiles_temp[0].tile_id [i] [j] += 2;
+        }
+      }
+    }
+  return tiles_temp[0];
+}
+
+// function for generate current chunk
+tag_tiles LoadChunk(std::string seed, std::string coords, unsigned short int id_biome){
+  tag_tiles tiles[1];
+
+  // size zone for calculating collision of chunks with different biomes
+  unsigned short int size_collide = 1;
+  if ((size_zone / 4) > 1) size_collide = size_zone / 4;
+
+  // generate current chunk
+  seed += coords;
+  srand(GetHash(seed));
+  tiles[0] = GenerateField(0, 0, size_zone, size_zone, id_biome);
+
   return tiles[0];
 }

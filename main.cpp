@@ -11,7 +11,7 @@
 
 unsigned short int wnd;            // id GLwindow
 
-const unsigned short int count_tex = 4; // count of textures
+const unsigned short int count_tex = 5; // count of textures
 GLuint tiles_tex[count_tex - 1];    // index texture of tiles
 
 // parameters of image
@@ -27,6 +27,7 @@ long t, dt;
 std::string fps_str;
 
 // parameters for load and generate world with seed
+tag_biomes load_biomes[1];
 tag_tiles load_tiles[num_zones];
 std::string str_seed, int_seed;
 
@@ -117,9 +118,17 @@ void LoadTextures(void){
   gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
 
   // getting data textures of tiles
-  LoadTextureImage("player.tga");
+  LoadTextureImage("water_wave.png");
   // texture with linear filter
   glBindTexture(GL_TEXTURE_2D, tiles_tex[3]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+
+  // getting data textures of tiles
+  LoadTextureImage("player.tga");
+  // texture with linear filter
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[4]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
@@ -167,6 +176,9 @@ void DrawChunk(unsigned short int index, int x, int y){
   for (loop_col = 0; loop_col < size_zone; loop_col++){
     for (loop_row = 0; loop_row < size_zone; loop_row++){
       tile_get = load_tiles[index].tile_id [loop_col] [loop_row];
+      /*if (current_biome_id == 1){
+        tile_get += 2;
+      }*/
 
       glBindTexture(GL_TEXTURE_2D, tiles_tex[tile_get]);
 
@@ -186,7 +198,7 @@ void DrawChunk(unsigned short int index, int x, int y){
 void DrawPlayer(void){
   glPushMatrix();
   glTranslatef(xpos, ypos, 0.0);
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[3]);
+  glBindTexture(GL_TEXTURE_2D, tiles_tex[4]);
   glBegin(GL_QUADS);
     glNormal3f(0.0, 0.0, -1.0);
     glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 1.0, -0.01);
@@ -211,9 +223,9 @@ std::string StrToInt(std::string str){
 
 // loading three chunks
 void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
-  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x)) + StrToInt(std::to_string(coords_chunks_A.y)));
-  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x)) + StrToInt(std::to_string(coords_chunks_B.y)));
-  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x)) + StrToInt(std::to_string(coords_chunks_C.y)));
+  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x) + std::to_string(coords_chunks_A.y)), load_biomes[0].biome_id[coords_chunks_A.x + (size_zone_biomes / 2)][coords_chunks_A.y + (size_zone_biomes / 2)]);
+  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x) + std::to_string(coords_chunks_B.y)), load_biomes[0].biome_id[coords_chunks_B.x + (size_zone_biomes / 2)][coords_chunks_B.y + (size_zone_biomes / 2)]);
+  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x) + std::to_string(coords_chunks_C.y)), load_biomes[0].biome_id[coords_chunks_C.x + (size_zone_biomes / 2)][coords_chunks_C.y + (size_zone_biomes / 2)]);
 }
 
 // moving and generate chunks
@@ -426,7 +438,7 @@ int main(int argc, char *argv[]){
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutInitWindowPosition(0, 0);
   glutInitWindowSize(1920, 1080);
-  wnd = glutCreateWindow("Evolution 0.0.0");
+  wnd = glutCreateWindow("Evolution 0.1.0");
 
   // initializing coordinates of chunks
   coords_chunks[0].x = 0;  coords_chunks[0].y = 0;
@@ -443,6 +455,7 @@ int main(int argc, char *argv[]){
   xpos = 0;
   ypos = 0;
   int_seed = StrToInt(str_seed);
+  load_biomes[0] = LoadBiomes(int_seed, StrToInt("00"));
   LoadThreeChunks({0, 1, 2},
                   {0, 0},
                   {0, 1},
