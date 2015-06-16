@@ -11,4 +11,6 @@ Now working on modificate worldgen function:
 - must be added a bioms (water and surface)
 must be added dynamically load biomes and smoothing borders chunks
 
+In version 0.1.0 must be worked dynamic load world with two biomes.
+
 Planned working on day/night change and time.
