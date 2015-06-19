@@ -47,6 +47,13 @@ struct tag_id_chunks{
 };
 tag_id_chunks id_chunks;
 
+// structure for int coordinates of biomes zones
+struct tag_coords_biomes{
+  int x;
+  int y;
+};
+tag_coords_biomes coords_biomes[1];
+
 // structure for int coordinates of chunks
 struct tag_coords_chunks{
   int x;
@@ -223,9 +230,9 @@ std::string StrToInt(std::string str){
 
 // loading three chunks
 void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
-  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x) + std::to_string(coords_chunks_A.y)), load_biomes[0].biome_id[coords_chunks_A.x + (size_zone_biomes / 2)][coords_chunks_A.y + (size_zone_biomes / 2)]);
-  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x) + std::to_string(coords_chunks_B.y)), load_biomes[0].biome_id[coords_chunks_B.x + (size_zone_biomes / 2)][coords_chunks_B.y + (size_zone_biomes / 2)]);
-  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x) + std::to_string(coords_chunks_C.y)), load_biomes[0].biome_id[coords_chunks_C.x + (size_zone_biomes / 2)][coords_chunks_C.y + (size_zone_biomes / 2)]);
+  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x) + std::to_string(coords_chunks_A.y)), 0);
+  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x) + std::to_string(coords_chunks_B.y)), 0);
+  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x) + std::to_string(coords_chunks_C.y)), 0);
 }
 
 // moving and generate chunks
@@ -293,20 +300,15 @@ void MoveChunks(bool horizontal, bool increase){
                   {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
 }
 
-// calculating border current chunk
-int CalculateBorderChunk(bool horizontal){
+// calculating border current chunk or biome zone
+int CalculateBorder(int pos, unsigned short int zone){
   int border;
-  if (horizontal){
-    border = xpos + (size_zone / 2);
-  }
-  else{
-    border = ypos + (size_zone / 2);
-  }
+  border = pos + (zone / 2);
   if (border > 0){
-    border = (((int)((border - 1) / size_zone)) * size_zone) + (size_zone / 2);
+    border = (((int)((border - 1) / zone)) * zone) + (zone / 2);
   }
   else{
-    border = ((((int)(border / size_zone)) * size_zone) - (size_zone / 2));
+    border = ((((int)(border / zone)) * zone) - (zone / 2));
   }
   return border;
 }
@@ -371,6 +373,22 @@ void Draw(void){
   print_str += std::to_string(ypos);
   DrawStaticString(-0.99, 0.91, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str);
 
+  // drawing coordinates chunks
+  std::string print_str1;
+  print_str1 = "Xc: ";
+  print_str1 += std::to_string(((int)(coords_chunks[0].x / 2)) - 1);
+  print_str1 += "; Yc: ";
+  print_str1 += std::to_string(((int)(coords_chunks[0].y / 2)) - 1);
+  DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str1);
+
+  // drawing coordinates biomes
+  std::string print_str2;
+  print_str2 = "Xb: ";
+  print_str2 += std::to_string(coords_biomes[0].x);
+  print_str2 += "; Yb: ";
+  print_str2 += std::to_string(coords_biomes[0].y);
+  DrawStaticString(-0.99, 0.83, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str2);
+
   glPopMatrix();
   restorePerspectiveProjection();
   glColor3f(1.0, 1.0, 1.0);
@@ -393,31 +411,52 @@ void Keyboard(unsigned char key, int x, int y){
 // processing keys
 void ExtKeyboard(int key, int x, int y){
   switch (key){
+    // key left arrow
     case GLUT_KEY_LEFT:
       xpos_cam += scale;
       xpos++;
-      if (xpos == CalculateBorderChunk(true)){
+      // if current coordinate x is equal to border current chunk
+      if (xpos == CalculateBorder(xpos, size_zone)){
+        // if current coordinate x of current chunk is equal to border array with id of biomes
+        if (coords_chunks[7].x == CalculateBorder(coords_chunks[7].x, size_zone_biomes)){
+          // generate new biomes array
+          coords_biomes[0].x = coords_biomes[0].x + 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
+        // changing of position and content of loaded into memory chunks
         MoveChunks(true, true);
       }
     break;
     case GLUT_KEY_RIGHT:
       xpos_cam -= scale;
       xpos--;
-      if (xpos == CalculateBorderChunk(true)){
+      if (xpos == CalculateBorder(xpos, size_zone)){
+        if (coords_chunks[3].x == CalculateBorder(coords_chunks[3].x, size_zone_biomes)){
+          coords_biomes[0].x = coords_biomes[0].x - 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
         MoveChunks(true, false);
       }
     break;
     case GLUT_KEY_UP:
       ypos_cam += scale;
       ypos++;
-      if (ypos == CalculateBorderChunk(false)){
+      if (ypos == CalculateBorder(ypos, size_zone)){
+        if (coords_chunks[1].y == CalculateBorder(coords_chunks[1].y, size_zone_biomes)){
+          coords_biomes[0].y = coords_biomes[0].y + 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
         MoveChunks(false, true);
       }
     break;
     case GLUT_KEY_DOWN:
       ypos_cam -= scale;
       ypos--;
-      if (ypos == CalculateBorderChunk(false)){
+      if (ypos == CalculateBorder(ypos, size_zone)){
+        if (coords_chunks[5].y == CalculateBorder(coords_chunks[5].y, size_zone_biomes)){
+          coords_biomes[0].y = coords_biomes[0].y - 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
         MoveChunks(false, false);
       }
     break;
@@ -438,7 +477,10 @@ int main(int argc, char *argv[]){
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutInitWindowPosition(0, 0);
   glutInitWindowSize(1920, 1080);
-  wnd = glutCreateWindow("Evolution 0.1.0");
+  wnd = glutCreateWindow("Evolution 0.0.8");
+
+  // initializing coordinates of biomes zones
+  coords_biomes[0].x = 0;  coords_biomes[0].y = 0;
 
   // initializing coordinates of chunks
   coords_chunks[0].x = 0;  coords_chunks[0].y = 0;
@@ -456,6 +498,7 @@ int main(int argc, char *argv[]){
   ypos = 0;
   int_seed = StrToInt(str_seed);
   load_biomes[0] = LoadBiomes(int_seed, StrToInt("00"));
+//  std::cout << load_biomes[0].biome_id[64, 64];
   LoadThreeChunks({0, 1, 2},
                   {0, 0},
                   {0, 1},
