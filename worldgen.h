@@ -22,12 +22,14 @@ struct tag_tiles{
   unsigned short int tile_id [size_zone] [size_zone];
 };
 
-// structure for biomes
+// structure for id biomes of chunks
 struct tag_biomes{
   unsigned short int biome_id [size_zone_biomes] [size_zone_biomes];
 };
 
+// function for loading id biomes of chunks into memory
 tag_biomes LoadBiomes(std::string seed, std::string coords);
+// function for loading id of tiles of current chunk into memory
 tag_tiles LoadChunk(std::string seed, std::string coords, unsigned short int id_biome);
 
 #endif

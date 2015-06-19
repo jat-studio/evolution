@@ -79,8 +79,8 @@ tag_biomes LoadBiomes(std::string seed, std::string coords){
       for (unsigned short int j = 0; j < size_zone_biomes; j++){
         percent = 1 + (rand() % 100);
         biomes_temp[0].biome_id [i] [j] = 0;
-        // 10 % chance
-        if (percent > 90){
+        // 40 % chance
+        if (percent > 60){
           biomes_temp[0].biome_id [i] [j] = 1;
         }
       }
