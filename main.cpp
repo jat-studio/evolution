@@ -183,6 +183,9 @@ void DrawChunk(unsigned short int index, int x, int y){
   for (loop_col = 0; loop_col < size_zone; loop_col++){
     for (loop_row = 0; loop_row < size_zone; loop_row++){
       tile_get = load_tiles[index].tile_id [loop_col] [loop_row];
+      /*if (current_biome_id == 1){
+        tile_get += 2;
+      }*/
 
       glBindTexture(GL_TEXTURE_2D, tiles_tex[tile_get]);
 
@@ -244,9 +247,15 @@ unsigned short int GetIDBiome(int x, int y){
 
 // loading three chunks
 void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
+<<<<<<< HEAD
   load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x) + std::to_string(coords_chunks_A.y)), GetIDBiome(coords_chunks_A.x, coords_chunks_A.y));
   load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x) + std::to_string(coords_chunks_B.y)), GetIDBiome(coords_chunks_B.x, coords_chunks_A.y));
   load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x) + std::to_string(coords_chunks_C.y)), GetIDBiome(coords_chunks_C.x, coords_chunks_C.y));
+=======
+  load_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_A.x) + std::to_string(coords_chunks_A.y)), 0);
+  load_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_B.x) + std::to_string(coords_chunks_B.y)), 0);
+  load_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(std::to_string(coords_chunks_C.x) + std::to_string(coords_chunks_C.y)), 0);
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
 }
 
 // moving and generate chunks
@@ -314,7 +323,11 @@ void MoveChunks(bool horizontal, bool increase){
                   {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
 }
 
+<<<<<<< HEAD
 // calculating left or up border current chunk or biome zone
+=======
+// calculating border current chunk or biome zone
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
 int CalculateBorder(int pos, unsigned short int zone){
   int border;
   border = pos + (zone / 2);
@@ -390,9 +403,15 @@ void Draw(void){
   // drawing coordinates chunks
   std::string print_str1;
   print_str1 = "Xc: ";
+<<<<<<< HEAD
   print_str1 += std::to_string(coords_chunks[0].x);
   print_str1 += "; Yc: ";
   print_str1 += std::to_string(coords_chunks[0].y);
+=======
+  print_str1 += std::to_string(((int)(coords_chunks[0].x / 2)) - 1);
+  print_str1 += "; Yc: ";
+  print_str1 += std::to_string(((int)(coords_chunks[0].y / 2)) - 1);
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
   DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str1);
 
   // drawing coordinates biomes
@@ -403,6 +422,7 @@ void Draw(void){
   print_str2 += std::to_string(coords_biomes[0].y);
   DrawStaticString(-0.99, 0.83, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str2);
 
+<<<<<<< HEAD
   // drawing border of current chunk
   std::string print_str3;
   print_str3 = "BXc: ";
@@ -411,6 +431,8 @@ void Draw(void){
   print_str3 += std::to_string(CalculateBorder(ypos, size_zone));
   DrawStaticString(-0.99, 0.79, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str3);
 
+=======
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
   glPopMatrix();
   restorePerspectiveProjection();
   glColor3f(1.0, 1.0, 1.0);
@@ -435,6 +457,7 @@ void ExtKeyboard(int key, int x, int y){
   switch (key){
     // key left arrow
     case GLUT_KEY_LEFT:
+<<<<<<< HEAD
       // if next coordinate x place in next chunk
       if ((xpos + 1) == (CalculateBorder(xpos, size_zone) + 1)){
         // if current coordinate x of current chunk is equal to border array with id of biomes
@@ -443,6 +466,18 @@ void ExtKeyboard(int key, int x, int y){
           coords_biomes[0].x = coords_biomes[0].x + 1;
           load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
         }*/
+=======
+      xpos_cam += scale;
+      xpos++;
+      // if current coordinate x is equal to border current chunk
+      if (xpos == CalculateBorder(xpos, size_zone)){
+        // if current coordinate x of current chunk is equal to border array with id of biomes
+        if (coords_chunks[7].x == CalculateBorder(coords_chunks[7].x, size_zone_biomes)){
+          // generate new biomes array
+          coords_biomes[0].x = coords_biomes[0].x + 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
         // changing of position and content of loaded into memory chunks
         MoveChunks(true, true);
       }
@@ -451,21 +486,51 @@ void ExtKeyboard(int key, int x, int y){
       xpos++;
     break;
     case GLUT_KEY_RIGHT:
+<<<<<<< HEAD
       if ((xpos - 1) == (CalculateBorder(xpos, size_zone) - 64)){
+=======
+      xpos_cam -= scale;
+      xpos--;
+      if (xpos == CalculateBorder(xpos, size_zone)){
+        if (coords_chunks[3].x == CalculateBorder(coords_chunks[3].x, size_zone_biomes)){
+          coords_biomes[0].x = coords_biomes[0].x - 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
         MoveChunks(true, false);
       }
       xpos_cam -= scale;
       xpos--;
     break;
     case GLUT_KEY_UP:
+<<<<<<< HEAD
       if ((ypos + 1) == (CalculateBorder(ypos, size_zone) + 1)){
+=======
+      ypos_cam += scale;
+      ypos++;
+      if (ypos == CalculateBorder(ypos, size_zone)){
+        if (coords_chunks[1].y == CalculateBorder(coords_chunks[1].y, size_zone_biomes)){
+          coords_biomes[0].y = coords_biomes[0].y + 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
         MoveChunks(false, true);
       }
       ypos_cam += scale;
       ypos++;
     break;
     case GLUT_KEY_DOWN:
+<<<<<<< HEAD
       if ((ypos - 1) == (CalculateBorder(ypos, size_zone) - 64)){
+=======
+      ypos_cam -= scale;
+      ypos--;
+      if (ypos == CalculateBorder(ypos, size_zone)){
+        if (coords_chunks[5].y == CalculateBorder(coords_chunks[5].y, size_zone_biomes)){
+          coords_biomes[0].y = coords_biomes[0].y - 1;
+          load_biomes[0] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+        }
+>>>>>>> 5566712b1c4c3c51eb0a1f748f57b759ff0b61be
         MoveChunks(false, false);
       }
       ypos_cam -= scale;
