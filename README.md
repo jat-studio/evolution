@@ -4,7 +4,6 @@ Project:
 - random generated
 - 2d world
 - crossplatform
-<<<<<<< HEAD
 - generate world with use xxhash hash function and seed.
 Using OpenGL, GLUT project on c++.
 
@@ -15,9 +14,3 @@ must be added dynamically load biomes and smoothing borders chunks
 In version 0.1.0 must be worked dynamic load world with two biomes.
 
 Planned working on day/night change and time.
-=======
-- generate world with use xxhash hash function and seed
-Using OpenGL, GLUT project on c++.
-
-Now working on day/night change and time.
->>>>>>> Create README.md
