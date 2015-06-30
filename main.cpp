@@ -227,6 +227,7 @@ std::string StrToInt(std::string str){
 
 // function for getting id biome from array using on input coordinates of chunk
 unsigned short int GetIDBiome(int x, int y){
+  //
   /*Необходимо преобразовать входные координаты чанка в id массива*/
   // redefining coordinates of chunk to id current array variables
   short int coeff_x = x + (size_zone_biomes / 2) - 1;
