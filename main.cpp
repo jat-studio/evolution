@@ -8,18 +8,14 @@
 #include <array>
 
 #include "worldgen.h"
+#include "engine.h"
 
 unsigned short int wnd;            // id GLwindow
 
 const unsigned short int count_tex = 5; // count of textures
 GLuint tiles_tex[count_tex - 1];    // index texture of tiles
 
-// parameters of image
-int width;
-int height;
-int bpp;
-unsigned int type;
-unsigned char* data_img;
+
 
 // fps drawing
 int fps;
@@ -62,117 +58,31 @@ struct tag_coords_chunks{
 };
 tag_coords_chunks coords_chunks[9];
 
-// loading texture by filename
-void LoadTextureImage(const char* texName){
-  // initializing il and ilu library
-  ilInit();
-  iluInit();
-  // loading texture
-  ilLoad(IL_TYPE_UNKNOWN, texName);
-  // processing of errors
-  int err = ilGetError();
-  if (err != IL_NO_ERROR){
-    const char* strError = iluErrorString(err);
-    std::cout << "Error loading texture!\n" << texName << "\n" << strError << "\n";
-    exit(EXIT_FAILURE);
-  }
-  // getting parameters of image
-  width  = ilGetInteger(IL_IMAGE_WIDTH);
-  height = ilGetInteger(IL_IMAGE_HEIGHT);
-  bpp    = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-  // getting data of image
-  data_img = ilGetData();
-  // determination type of image
-  switch (bpp){
-    case 1:
-      type = GL_RGB8;
-    break;
-    case 3:
-      type = GL_RGB;
-    break;
-    case 4:
-      type = GL_RGBA;
-    break;
-  }
-}
+ClassScene Scene;
 
 // loading textures
-void LoadTextures(void){
+void LoadTextures(){
   // create array of textures
   glGenTextures(count_tex, &tiles_tex[0]);
 
-  // getting data textures of tiles
-  LoadTextureImage("grass.png");
-  // loading textures into memory
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[0]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+  // initializing il and ilu library
+  ilInit();
+  iluInit();
 
-  // getting data textures of tiles
-  LoadTextureImage("stone.png");
-  // texture with linear filter
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[1]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-
-  // getting data textures of tiles
-  LoadTextureImage("water.png");
-  // texture with linear filter
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[2]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-
-  // getting data textures of tiles
-  LoadTextureImage("water_wave.png");
-  // texture with linear filter
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[3]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
-
-  // getting data textures of tiles
-  LoadTextureImage("player.tga");
-  // texture with linear filter
-  glBindTexture(GL_TEXTURE_2D, tiles_tex[4]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height, type, GL_UNSIGNED_BYTE, data_img);
+  // loading textures
+  Scene.LoadTextureImage("grass.png", tiles_tex[0]);
+  Scene.LoadTextureImage("stone.png", tiles_tex[1]);
+  Scene.LoadTextureImage("water.png", tiles_tex[2]);
+  Scene.LoadTextureImage("water_wave.png", tiles_tex[3]);
+  Scene.LoadTextureImage("player.tga", tiles_tex[4]);
 
   // enabling textures
   glEnable(GL_TEXTURE_2D);
 }
 
 // deleting textures
-void clearTextures(void){
+void clearTextures(){
   glDeleteTextures(count_tex, &tiles_tex[0]);
-}
-
-// enter to ortho mode
-void setOrthographicProjection(void){
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-  gluOrtho2D(0, 0, 1920, 1080);
-  glMatrixMode(GL_MODELVIEW);
-}
-
-// exit of ortho mode
-void restorePerspectiveProjection(void){
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
-}
-
-// output string
-void DrawStaticString(float x, float y, float z, void *font, std::string input){
-  glRasterPos3f(x, y, z);
-  unsigned short int len = input.length();
-  for(unsigned short int i = 0; i < len; i++){
-    glutBitmapCharacter(font, input[i]);
-  }
 }
 
 //drawing chunk
@@ -200,7 +110,7 @@ void DrawChunk(unsigned short int index, int x, int y){
 }
 
 //drawing player
-void DrawPlayer(void){
+void DrawPlayer(){
   glPushMatrix();
   glTranslatef(xpos, ypos, 0.0);
   glBindTexture(GL_TEXTURE_2D, tiles_tex[4]);
@@ -212,18 +122,6 @@ void DrawPlayer(void){
     glTexCoord2f(0.0, 1.0); glVertex3f(0.0, 0.0, -0.01);
   glEnd();
   glPopMatrix();
-}
-
-// string >> char_codes >> string
-std::string StrToInt(std::string str){
-  unsigned short int length = str.length();
-  char buffer[3];
-  std::string str_out;
-  for (unsigned short int i = 0; i < length; i++){
-    sprintf(buffer,"%d", (int)str[i]);
-    str_out += buffer;
-  }
-  return str_out;
 }
 
 // function for getting id biome from array using on input coordinates of chunk
@@ -340,19 +238,6 @@ void MoveChunks(bool horizontal, bool increase){
                   {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
 }
 
-// calculating left or up border current chunk or biome zone
-int CalculateBorder(int pos, unsigned short int zone){
-  int border;
-  border = pos + (zone / 2);
-  if (border > 0){
-    border = (((int)((border - 1) / zone)) * zone) + (zone / 2);
-  }
-  else{
-    border = ((((int)(border / zone)) * zone) - (zone / 2));
-  }
-  return border;
-}
-
 // repainting OpenGL by reshape window
 void Reshape(GLsizei Width, GLsizei Height){
   glMatrixMode(GL_PROJECTION);
@@ -365,7 +250,7 @@ void Reshape(GLsizei Width, GLsizei Height){
 }
 
 // painting Scene
-void Draw(void){
+void Draw(){
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
   gluLookAt(xpos_cam, ypos_cam, -6.0,
@@ -387,7 +272,11 @@ void Draw(void){
 
   DrawPlayer();
 
-  // calculating fps
+
+
+  // painting text on 2d mode
+  Scene.setOrthographicProjection();
+  // drawing fps
   fps++;
   t = glutGet(GLUT_ELAPSED_TIME);
   if (t - dt > 1000){
@@ -395,15 +284,7 @@ void Draw(void){
     dt = t;
     fps = 0;
   }
-
-  // painting text on 2d mode
-  glColor3f(0.0, 0.0, 0.0);
-  glDisable(GL_BLEND);
-  setOrthographicProjection();
-  glPushMatrix();
-  glLoadIdentity();
-  // drawing fps
-  DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, fps_str);
+  Scene.DrawStaticString(-0.99, 0.95, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, fps_str);
 
   // drawing coordinates
   std::string print_str;
@@ -411,7 +292,7 @@ void Draw(void){
   print_str += std::to_string(xpos);
   print_str += "; Y: ";
   print_str += std::to_string(ypos);
-  DrawStaticString(-0.99, 0.91, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str);
+  Scene.DrawStaticString(-0.99, 0.91, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str);
 
   // drawing coordinates chunks
   std::string print_str1;
@@ -419,7 +300,7 @@ void Draw(void){
   print_str1 += std::to_string(coords_chunks[0].x);
   print_str1 += "; Yc: ";
   print_str1 += std::to_string(coords_chunks[0].y);
-  DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str1);
+  Scene.DrawStaticString(-0.99, 0.87, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str1);
 
   // drawing coordinates biomes
   std::string print_str2;
@@ -427,12 +308,9 @@ void Draw(void){
   print_str2 += std::to_string(coords_biomes[0].x);
   print_str2 += "; Yb: ";
   print_str2 += std::to_string(coords_biomes[0].y);
-  DrawStaticString(-0.99, 0.83, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str2);
+  Scene.DrawStaticString(-0.99, 0.83, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str2);
 
-  glPopMatrix();
-  restorePerspectiveProjection();
-  glColor3f(1.0, 1.0, 1.0);
-  glEnable(GL_BLEND);
+  Scene.setPerspectiveProjection();
 
   glutSwapBuffers();
 }
@@ -569,7 +447,7 @@ void ExtKeyboard(int key, int x, int y){
   }
 }
 
-void Idle(void){
+void Idle(){
 }
 
 int main(int argc, char *argv[]){

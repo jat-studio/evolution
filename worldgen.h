@@ -1,6 +1,7 @@
 #ifndef WORLDGEN_H_INCLUDED
 #define WORLDGEN_H_INCLUDED
 
+/*#######################   variables   #######################*/
 // size of chunk
 const unsigned short int size_zone = 64;
 // size of loaded biomes
@@ -9,7 +10,6 @@ const unsigned short int size_zone_biomes = 64;
 const unsigned short int num_zones = 9;
 // scale of scene
 const float scale = 0.07;
-
 // constants for calculating hash
 const unsigned int PRIME32_1 = 2654435761;
 const unsigned int PRIME32_2 = 2246822519;
@@ -21,12 +21,14 @@ const unsigned int PRIME32_5 = 374761393;
 struct tag_tiles{
   unsigned short int tile_id [size_zone] [size_zone];
 };
-
 // structure for id biomes of chunks
 struct tag_biomes{
   unsigned short int biome_id [size_zone_biomes] [size_zone_biomes];
 };
 
+/*#######################   functions   #######################*/
+// string >> char_codes >> string
+std::string StrToInt(std::string str);
 // function for loading id biomes of chunks into memory
 tag_biomes LoadBiomes(std::string seed, std::string coords);
 // function for loading id of tiles of current chunk into memory

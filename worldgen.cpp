@@ -4,6 +4,18 @@
 
 #include "worldgen.h"
 
+// string >> char_codes >> string
+std::string StrToInt(std::string str){
+  unsigned short int length = str.length();
+  char buffer[3];
+  std::string str_out;
+  for (unsigned short int i = 0; i < length; i++){
+    sprintf(buffer,"%d", (int)str[i]);
+    str_out += buffer;
+  }
+  return str_out;
+}
+
 // function for calculating hash
 unsigned int RotateLeft(unsigned int value, int count){
   return (value << count) | (value >> (32 - count));
