@@ -83,8 +83,27 @@ class ClassScene{
     }
 };
 
+/*#######################   structures   #######################*/
+// structure for id chunks
+struct tag_id_chunks{
+  unsigned short int ida;
+  unsigned short int idb;
+  unsigned short int idc;
+};
+// structure for int coordinates of biomes zones
+struct tag_coords_biomes{
+  int x;
+  int y;
+};
+// structure for int coordinates of chunks
+struct tag_coords_chunks{
+  int x;
+  int y;
+};
+
 /*#######################   functions   #######################*/
 // calculating left or up border current chunk or biome zone
-int CalculateBorder(int pos, unsigned short int zone);
+// and compare it to next coordinate
+bool CalculateBorder(int pos, unsigned short int zone, bool increase);
 
 #endif

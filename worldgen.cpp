@@ -1,7 +1,9 @@
+/*Basic c library*/
 #include <cstdlib>
 #include <iostream>
 #include <array>
 
+/*My library*/
 #include "worldgen.h"
 
 // string >> char_codes >> string

@@ -49,6 +49,8 @@
 			<Add directory="/usr/lib" />
 			<Add directory="/home/jatstudio/Projects/evolution/" />
 		</Linker>
+		<Unit filename="engine.cpp" />
+		<Unit filename="engine.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="worldgen.cpp" />
 		<Unit filename="worldgen.h" />

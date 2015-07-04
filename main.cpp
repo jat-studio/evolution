@@ -1,21 +1,22 @@
-#include <GL/glut.h>
-#include <IL/il.h>
-#include <IL/ilu.h>
-
+/*Basic c library*/
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <array>
 
+/*Open GL*/
+#include <GL/glut.h>
+#include <IL/il.h>
+#include <IL/ilu.h>
+
+/*My library*/
 #include "worldgen.h"
 #include "engine.h"
 
 unsigned short int wnd;            // id GLwindow
 
 const unsigned short int count_tex = 5; // count of textures
-GLuint tiles_tex[count_tex - 1];    // index texture of tiles
-
-
+GLuint tiles_tex[count_tex];    // index texture of tiles
 
 // fps drawing
 int fps;
@@ -23,7 +24,7 @@ long t, dt;
 std::string fps_str;
 
 // parameters for load and generate world with seed
-tag_biomes loaded_biomes[3];          // three biome zones (current vertical and horizontal next zone)
+tag_biomes loaded_biomes[4];          // three biome zones (current vertical, horizontal and diagonal next zone)
 tag_biomes tmp_biomes[1];             // temporary structure for redefine loaded_biomes
 tag_tiles loaded_tiles[num_zones];
 std::string str_seed, int_seed;
@@ -37,27 +38,12 @@ int xpos;
 int ypos;
 
 // structure for id chunks
-struct tag_id_chunks{
-  unsigned short int ida;
-  unsigned short int idb;
-  unsigned short int idc;
-};
 tag_id_chunks id_chunks;
-
 // structure for int coordinates of biomes zones
-struct tag_coords_biomes{
-  int x;
-  int y;
-};
 tag_coords_biomes coords_biomes[1];
-
 // structure for int coordinates of chunks
-struct tag_coords_chunks{
-  int x;
-  int y;
-};
 tag_coords_chunks coords_chunks[9];
-
+// Class for basic functions
 ClassScene Scene;
 
 // loading textures
@@ -124,11 +110,16 @@ void DrawPlayer(){
   glPopMatrix();
 }
 
+// convert coordinates chunk to ID array
+tag_coords_chunks ConvertCoordsToID(int x, int y){
+
+}
+
 // function for getting id biome from array using on input coordinates of chunk
 unsigned short int GetIDBiome(int x, int y){
   /*Необходимо выдавать на основе координат чанков порядковые номера в массивах*/
 
-  // redefining coordinates of chunk to id current array variables
+  // change of coordinates for convenience
   short int coeff_x = x + (size_zone_biomes / 2) - 1;
   short int coeff_y = y + (size_zone_biomes / 2) - 1;
   // if coordinate x ranges in array loaded_biomes[0]
@@ -332,16 +323,16 @@ void ExtKeyboard(int key, int x, int y){
     // key left arrow
     case GLUT_KEY_LEFT:
       // if next coordinate x placed in next chunk
-      if ((xpos + 1) == (CalculateBorder(xpos, size_zone) + 1)){
+      if (CalculateBorder(xpos, size_zone, true)){
 
         // if next coordinate x of left chunk placed in next biome zone
-        if ((coords_chunks[7].x + 1) == (CalculateBorder(coords_chunks[7].x, size_zone_biomes) + 1)){
+        if (CalculateBorder(coords_chunks[7].x, size_zone_biomes, true)){
           // load next horizontal biome zone ([1])
           loaded_biomes[1] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
         }
 
         // if next coordinate x of center chunk placed in next biome zone
-        if ((coords_chunks[0].x + 1) == (CalculateBorder(coords_chunks[0].x, size_zone_biomes) + 1)){
+        if (CalculateBorder(coords_chunks[0].x, size_zone_biomes, true)){
           // increase coordinates of biome zone
           coords_biomes[0].x++;
           // redefine biome zones
@@ -361,16 +352,16 @@ void ExtKeyboard(int key, int x, int y){
     // key right arrow
     case GLUT_KEY_RIGHT:
       // if next coordinate x placed in next chunk
-      if ((xpos - 1) == (CalculateBorder(xpos, size_zone) - size_zone)){
+      if (CalculateBorder(xpos, size_zone, false)){
 
         // if next coordinate x of left chunk placed in next biome zone
-        if ((coords_chunks[3].x - 1) == (CalculateBorder(coords_chunks[3].x, size_zone_biomes) - size_zone_biomes)){
+        if (CalculateBorder(coords_chunks[3].x, size_zone_biomes, false)){
           // load next horizontal biome zone ([1])
           loaded_biomes[1] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
         }
 
         // if next coordinate x of center chunk placed in next biome zone
-        if ((coords_chunks[0].x - 1) == (CalculateBorder(coords_chunks[0].x, size_zone_biomes) - size_zone_biomes)){
+        if (CalculateBorder(coords_chunks[0].x, size_zone_biomes, false)){
           // increase coordinates of biome zone
           coords_biomes[0].x--;
           // redefine biome zones
@@ -390,16 +381,16 @@ void ExtKeyboard(int key, int x, int y){
     // key up arrow
     case GLUT_KEY_UP:
       // if next coordinate y placed in next chunk
-      if ((ypos + 1) == (CalculateBorder(ypos, size_zone) + 1)){
+      if (CalculateBorder(ypos, size_zone, true)){
 
         // if next coordinate y of up chunk placed in next biome zone
-        if ((coords_chunks[1].y + 1) == (CalculateBorder(coords_chunks[1].y, size_zone_biomes) + 1)){
+        if (CalculateBorder(coords_chunks[1].y, size_zone_biomes, true)){
           // load next vertical biome zone ([2])
           loaded_biomes[2] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
         }
 
         // if next coordinate y of center chunk placed in next biome zone
-        if ((coords_chunks[0].y + 1) == (CalculateBorder(coords_chunks[0].y, size_zone_biomes) + 1)){
+        if (CalculateBorder(coords_chunks[0].y, size_zone_biomes, true)){
           // increase coordinates of biome zone
           coords_biomes[0].y++;
           // redefine biome zones
@@ -419,16 +410,16 @@ void ExtKeyboard(int key, int x, int y){
     // key down arrow
     case GLUT_KEY_DOWN:
       // if next coordinate y placed in next chunk
-      if ((ypos - 1) == (CalculateBorder(ypos, size_zone) - 64)){
+      if (CalculateBorder(ypos, size_zone, false)){
 
         // if next coordinate y of down chunk placed in next biome zone
-        if ((coords_chunks[5].y - 1) == (CalculateBorder(coords_chunks[5].y, size_zone_biomes) - size_zone_biomes)){
+        if (CalculateBorder(coords_chunks[5].y, size_zone_biomes, false)){
           // load next vertical biome zone ([2])
           loaded_biomes[2] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
         }
 
         // if next coordinate y of center chunk placed in next biome zone
-        if ((coords_chunks[0].y - 1) == (CalculateBorder(coords_chunks[0].y, size_zone_biomes) - size_zone_biomes)){
+        if (CalculateBorder(coords_chunks[0].y, size_zone_biomes, false)){
           // increase coordinates of biome zone
           coords_biomes[0].y--;
           // redefine biome zones
