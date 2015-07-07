@@ -5,9 +5,9 @@
 #include <array>
 
 /*Open GL*/
-#include <GL/glut.h>
-#include <IL/il.h>
-#include <IL/ilu.h>
+#include "GL/glut.h"
+#include "IL/il.h"
+#include "IL/ilu.h"
 
 /*My library*/
 #include "worldgen.h"
@@ -36,6 +36,14 @@ float ypos_cam = 0.0;
 // coordinates of tiles
 int xpos;
 int ypos;
+
+// coordinates of left and top border chunks
+int border_chunk_xpos;
+int border_chunk_ypos;
+
+// coordinates of left and top border biomes
+int border_biom_xpos;
+int border_biom_ypos;
 
 // structure for id chunks
 tag_id_chunks id_chunks;
@@ -108,11 +116,6 @@ void DrawPlayer(){
     glTexCoord2f(0.0, 1.0); glVertex3f(0.0, 0.0, -0.01);
   glEnd();
   glPopMatrix();
-}
-
-// convert coordinates chunk to ID array
-tag_coords_chunks ConvertCoordsToID(int x, int y){
-
 }
 
 // function for getting id biome from array using on input coordinates of chunk
@@ -229,6 +232,92 @@ void MoveChunks(bool horizontal, bool increase){
                   {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
 }
 
+// processing move camera
+// variable direction:
+// 0 - left
+// 1 - right
+// 2 - up
+// 3 - down
+/*void ProcessMoving(unsigned short int direction){
+  // defining variables
+  int Mov_pos;
+  int Mov_border;
+  int Mov_BorderBiom;
+  bool Mov_increase;
+  bool Mov_horizontal;
+  int Mov_BorderChunkCoord;
+  int Mov_DiagonalChunkCoord1;
+  int Mov_DiagonalChunkCoord2;
+  int Mov_DiagonalBorderBiom1;
+  int Mov_DiagonalBorderBiom2;
+  unsigned short int Mov_IDBiomesArray;
+  short int Mov_CoeffX;
+  short int Mov_CoeffY;
+  short int Mov_BiomCoeffX1;
+  short int Mov_BiomCoeffY1;
+  short int Mov_BiomCoeffX2;
+  short int Mov_BiomCoeffY2;
+
+  // initializing variables
+  switch (direction){
+    // left direction
+    case 0:
+      Mov_pos = xpos + 1;
+      Mov_border = border_chunk_xpos + 1;
+      Mov_BorderBiom = border_biom_xpos + 1;
+      Mov_increase = true;
+      Mov_horizontal = true;
+      Mov_BorderChunkCoord = coords_chunks[7].x + 1;
+      Mov_DiagonalChunkCoord1 = coords_chunks[1].y + 1;
+      Mov_DiagonalChunkCoord2 = coords_chunks[5].y - 1;
+      Mov_DiagonalBorderBiom1 = border_biom_ypos + 1;
+      Mov_DiagonalBorderBiom2 = border_biom_ypos - size_zone_biomes;
+      Mov_IDBiomesArray = 1;
+      Mov_CoeffX = 1;
+      Mov_CoeffY = 0;
+      Mov_BiomCoeffX1 = 1;
+      Mov_BiomCoeffY1 = 1;
+      Mov_BiomCoeffX2 = 1;
+      Mov_BiomCoeffY2 = -1;
+
+    break;
+  }
+
+  // if next coordinate placed in next chunk
+  if (Mov_pos == Mov_border){
+    // if next coordinate of border chunk placed in next biome zone
+    if (Mov_BorderChunkCoord == Mov_BorderBiom){
+      // load next biome zone
+      loaded_biomes[Mov_IDBiomesArray] =
+      LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x + Mov_CoeffX)
+                 + std::to_string(coords_biomes[0].y + Mov_CoeffY)));
+      // load next diagonal biome zone ([3])
+      if (Mov_DiagonalChunkCoord1 == Mov_DiagonalBorderBiom1){
+        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x + Mov_BiomCoeffX1) + std::to_string(coords_biomes[0].y + Mov_BiomCoeffY1)));
+      }
+      if (Mov_DiagonalChunkCoord2 == Mov_DiagonalBorderBiom2){
+        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x + Mov_BiomCoeffX2) + std::to_string(coords_biomes[0].y + Mov_BiomCoeffY2)));
+      }
+    }
+
+        // if next coordinate x of center chunk placed in next biome zone
+        if ((coords_chunks[0].x + Mov_CoeffX) == ()){
+          // increase coordinates of biome zone
+          coords_biomes[0].x++;
+          // redefine biome zones
+          tmp_biomes[0] = loaded_biomes[0];
+          loaded_biomes[0] = loaded_biomes[1];
+          loaded_biomes[1] = tmp_biomes[0];
+        }
+
+        // changing of position and content of loaded into memory chunks
+        MoveChunks(true, true);
+      }
+      // increase camera and tile coordinates
+      xpos_cam += scale;
+      xpos++;
+}*/
+
 // repainting OpenGL by reshape window
 void Reshape(GLsizei Width, GLsizei Height){
   glMatrixMode(GL_PROJECTION);
@@ -328,7 +417,11 @@ void ExtKeyboard(int key, int x, int y){
         // if next coordinate x of left chunk placed in next biome zone
         if (CalculateBorder(coords_chunks[7].x, size_zone_biomes, true)){
           // load next horizontal biome zone ([1])
-          loaded_biomes[1] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+          loaded_biomes[1] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x + 1) + std::to_string(coords_biomes[0].y)));
+          // load next diagonal biome zone ([3])
+          if (CalculateBorder(coords_chunks[7].x, size_zone_biomes, true)){
+            loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
+          }
         }
 
         // if next coordinate x of center chunk placed in next biome zone
@@ -468,9 +561,14 @@ int main(int argc, char *argv[]){
   coords_chunks[7].x = 1;  coords_chunks[7].y = 0;
   coords_chunks[8].x = 1;  coords_chunks[8].y = 1;
 
-  // loading world
+  // coordinates and borders
   xpos = 0;
   ypos = 0;
+  border_chunk_xpos = xpos + (size_zone / 2);
+  border_chunk_ypos = ypos + (size_zone / 2);
+  border_biom_xpos = coords_chunks[0].x + (size_zone_biomes / 2);
+  border_biom_ypos = coords_chunks[0].y + (size_zone_biomes / 2);
+  // loading world
   int_seed = StrToInt(str_seed);
   loaded_biomes[0] = LoadBiomes(int_seed, StrToInt("00"));
   LoadThreeChunks({0, 1, 2},

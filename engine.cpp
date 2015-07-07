@@ -2,9 +2,9 @@
 #include <iostream>
 
 /*Open GL*/
-#include <GL/glut.h>
-#include <IL/il.h>
-#include <IL/ilu.h>
+#include "GL/glut.h"
+#include "IL/il.h"
+#include "IL/ilu.h"
 
 /*My library*/
 #include "engine.h"
