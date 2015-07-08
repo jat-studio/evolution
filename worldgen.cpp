@@ -127,8 +127,8 @@ tag_tiles LoadChunk(std::string seed, std::string coords, unsigned short int id_
   tag_tiles tiles[1];
 
   // size zone for calculating collision of chunks with different biomes
-  unsigned short int size_collide = 1;
-  if ((size_zone / 4) > 1) size_collide = size_zone / 4;
+  //unsigned short int size_collide = 1;
+  //if ((size_zone / 4) > 1) size_collide = size_zone / 4;
 
   // generate current chunk
   seed += coords;
