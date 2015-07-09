@@ -21,6 +21,7 @@
 /*Config ini function*/
 #include "config.h"
 #include "minini/minIni.h"
+#include <vector>
 
 unsigned short int wnd; // id GLwindow
 
@@ -79,7 +80,7 @@ char* getPath() {
 
 // loading textures
 
-void LoadTextures() {
+void LoadTextures(std::vector<std::string> texturelist) {
     //char* res= "res/imgs";
    // char* exepath = getPath();
 
@@ -89,18 +90,10 @@ void LoadTextures() {
     // initializing il and ilu library
     ilInit();
     iluInit();
-    
-//    for(int i=0;tiles_tex.length();i++){
-//      Scene.LoadTextureImage(array_tiles_tex[i]);   
-//    }
-    
     // loading textures
-    Scene.LoadTextureImage("grass.png", tiles_tex[0]);
-    Scene.LoadTextureImage("stone.png", tiles_tex[1]);
-    Scene.LoadTextureImage("water.png", tiles_tex[2]);
-    Scene.LoadTextureImage("water_wave.png", tiles_tex[3]);
-    Scene.LoadTextureImage("player.tga", tiles_tex[4]);
-
+    for(uint i=0;i<texturelist.size();i++){
+      Scene.LoadTextureImage(texturelist[i].c_str(), tiles_tex[i]);  
+    }
     // enabling textures
     glEnable(GL_TEXTURE_2D);
 }
@@ -586,8 +579,9 @@ int main(int argc, char *argv[]) {
 
     minIni ini = OpenIniFile(mainini);
     std::string s= getTextureIni(ini);
-    getTextureList(s);
-    std::cout<<s<<std::endl;
+    std::vector<std::string> texturelist= getTextureList(s);
+
+    
     // getting seed
     // loading world
     std::cout << "Enter seed:";
@@ -597,7 +591,7 @@ int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutInitWindowPosition(0, 0);
-    glutInitWindowSize(1920, 1080);
+    glutInitWindowSize(640, 480);
     wnd = glutCreateWindow("Evolution 0.0.8");
 
     // initializing coordinates of biomes zones
@@ -666,7 +660,7 @@ int main(int argc, char *argv[]) {
     });
 
     // load Textures
-    LoadTextures();
+    LoadTextures(texturelist);
 
     // defining events of window
     glutDisplayFunc(Draw);

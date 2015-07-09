@@ -40,8 +40,11 @@
       </df>
       <df name="minini">
         <in>minGlue-FatFs.h</in>
+        <in>minGlue-ccs.h</in>
         <in>minGlue-efsl.h</in>
+        <in>minGlue-ffs.h</in>
         <in>minGlue-mdd.h</in>
+        <in>minGlue-stdio.h</in>
         <in>minGlue.h</in>
         <in>minIni.c</in>
         <in>minIni.h</in>
@@ -57,7 +60,6 @@
       </df>
       <df name="res">
         <df name="config">
-          <in>texture.ini</in>
         </df>
         <df name="imgs">
         </df>
@@ -66,7 +68,6 @@
       <in>config.h</in>
       <in>engine.cpp</in>
       <in>engine.h</in>
-      <in>evolution.ini</in>
       <in>main.cpp</in>
       <in>worldgen.cpp</in>
       <in>worldgen.h</in>

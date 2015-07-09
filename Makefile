@@ -45,7 +45,7 @@ $(TARGETDIR_evolution)/worldgen.o: worldgen.cpp
 $(TARGETDIR_evolution)/config.o: config.cpp
 	$(CXX)  $(CXXFLAGS) $(INCS) -o $@ config.cpp
 $(TARGETDIR_evolution)/minIni.o: minini/minIni.c
-	$(CXX)  $(CCFLAGS) $(INCS) -o $@ minini/minIni.c
+	$(CCC)  $(CCFLAGS) $(INCS) -o $@ minini/minIni.c
 # Исполняемый файл
 $(TARGETDIR_evolution)/evolution: $(TARGETDIR_evolution) $(OBJS_evolution)
 	$(CXX) $(CXXFLAGS_evolution) $(OBJS_evolution) -o $@  $(LIBS) 
