@@ -81,9 +81,6 @@ char* getPath() {
 // loading textures
 
 void LoadTextures(std::vector<std::string> texturelist) {
-    //char* res= "res/imgs";
-   // char* exepath = getPath();
-
     // create array of textures
     glGenTextures(count_tex, &tiles_tex[0]);
 

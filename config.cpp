@@ -1,6 +1,8 @@
 #include "minini/minIni.h"
 #include <iostream>
 #include <vector>
+
+//Открытие ini файлов
 minIni OpenIniFile(const std::string mainini) {
     minIni ini(mainini);
     return ini;
@@ -11,13 +13,14 @@ std::string getTextureIni(minIni ini) {
     s = ini.gets("config_path", "texture", "NULL");
     return s;
 }
-
+//количество секций в конфиге
 int getTotalSections(minIni ini){
     int is;
     std::string section;
     for (is = 0; section = ini.getsection(is), section.length() > 0; is++) {}
     return is;
 }
+//количество ключей в секции
 int getTotalKeys(minIni ini,std::string section){
     int ik;
     std::string s;
@@ -25,7 +28,7 @@ int getTotalKeys(minIni ini,std::string section){
     return ik;
 }
 
-
+//список текстур
 std::vector<std::string> getTextureList(std::string ini){
   minIni texture = OpenIniFile(ini);
   std::string section,s,value;
