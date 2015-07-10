@@ -232,20 +232,81 @@ void MoveChunks(bool horizontal, bool increase){
                   {coords_chunks[id[8]].x, coords_chunks[id[8]].y});
 }
 
+// moving biome zones
+void MoveBiomes(bool horizontal, bool increase){
+  if (horizontal){
+    if (increase){
+      coords_biomes[0].x++;
+    }
+    else{
+      coords_biomes[0].x--;
+    }
+    tmp_biomes[0] = loaded_biomes[0];
+    loaded_biomes[0] = loaded_biomes[1];
+    loaded_biomes[1] = tmp_biomes[0];
+
+    tmp_biomes[0] = loaded_biomes[2];
+    loaded_biomes[2] = loaded_biomes[3];
+    loaded_biomes[3] = tmp_biomes[0];
+  }
+  else{
+    if (increase){
+      coords_biomes[0].y++;
+    }
+    else{
+      coords_biomes[0].y--;
+    }
+    tmp_biomes[0] = loaded_biomes[0];
+    loaded_biomes[0] = loaded_biomes[2];
+    loaded_biomes[2] = tmp_biomes[0];
+
+    tmp_biomes[0] = loaded_biomes[1];
+    loaded_biomes[1] = loaded_biomes[3];
+    loaded_biomes[3] = tmp_biomes[0];
+  }
+}
+
+// moving camera
+void MoveCamera(bool horizontal, bool increase){
+  if (horizontal){
+    if (increase){
+      xpos_cam += scale;
+      xpos++;
+    }
+    else{
+      xpos_cam -= scale;
+      xpos--;
+    }
+  }
+  else{
+    if (increase){
+      ypos_cam += scale;
+      ypos++;
+    }
+    else{
+      ypos_cam -= scale;
+      ypos--;
+    }
+  }
+}
+
 // processing move camera
 // variable direction:
 // 0 - left
 // 1 - right
 // 2 - up
 // 3 - down
-/*void ProcessMoving(unsigned short int direction){
+void ProcessMoving(unsigned short int direction){
   // defining variables
-  int Mov_pos;
-  int Mov_border;
-  int Mov_BorderBiom;
   bool Mov_increase;
   bool Mov_horizontal;
+
+  int Mov_pos;
+  int Mov_border;
+
+  int Mov_BorderBiom;
   int Mov_BorderChunkCoord;
+  int Mov_CenterChunkCoord;
   int Mov_DiagonalChunkCoord1;
   int Mov_DiagonalChunkCoord2;
   int Mov_DiagonalBorderBiom1;
@@ -262,12 +323,15 @@ void MoveChunks(bool horizontal, bool increase){
   switch (direction){
     // left direction
     case 0:
-      Mov_pos = xpos + 1;
-      Mov_border = border_chunk_xpos + 1;
-      Mov_BorderBiom = border_biom_xpos + 1;
       Mov_increase = true;
       Mov_horizontal = true;
+
+      Mov_pos = xpos + 1;
+      Mov_border = border_chunk_xpos + 1;
+
+      Mov_BorderBiom = border_biom_xpos + 1;
       Mov_BorderChunkCoord = coords_chunks[7].x + 1;
+      Mov_CenterChunkCoord = coords_chunks[0].x + 1;
       Mov_DiagonalChunkCoord1 = coords_chunks[1].y + 1;
       Mov_DiagonalChunkCoord2 = coords_chunks[5].y - 1;
       Mov_DiagonalBorderBiom1 = border_biom_ypos + 1;
@@ -279,7 +343,75 @@ void MoveChunks(bool horizontal, bool increase){
       Mov_BiomCoeffY1 = 1;
       Mov_BiomCoeffX2 = 1;
       Mov_BiomCoeffY2 = -1;
+    break;
+    // right direction
+    case 1:
+      Mov_increase = false;
+      Mov_horizontal = true;
 
+      Mov_pos = xpos - 1;
+      Mov_border = border_chunk_xpos - size_zone;
+
+      Mov_BorderBiom = border_biom_xpos - size_zone_biomes;
+      Mov_BorderChunkCoord = coords_chunks[3].x - 1;
+      Mov_CenterChunkCoord = coords_chunks[0].x - 1;
+      Mov_DiagonalChunkCoord1 = coords_chunks[1].y + 1;
+      Mov_DiagonalChunkCoord2 = coords_chunks[5].y - 1;
+      Mov_DiagonalBorderBiom1 = border_biom_ypos + 1;
+      Mov_DiagonalBorderBiom2 = border_biom_ypos - size_zone_biomes;
+      Mov_IDBiomesArray = 1;
+      Mov_CoeffX = -1;
+      Mov_CoeffY = 0;
+      Mov_BiomCoeffX1 = -1;
+      Mov_BiomCoeffY1 = 1;
+      Mov_BiomCoeffX2 = -1;
+      Mov_BiomCoeffY2 = -1;
+    break;
+    // up direction
+    case 2:
+      Mov_increase = true;
+      Mov_horizontal = false;
+
+      Mov_pos = ypos + 1;
+      Mov_border = border_chunk_ypos + 1;
+
+      Mov_BorderBiom = border_biom_ypos + 1;
+      Mov_BorderChunkCoord = coords_chunks[1].y + 1;
+      Mov_CenterChunkCoord = coords_chunks[0].y + 1;
+      Mov_DiagonalChunkCoord1 = coords_chunks[7].x + 1;
+      Mov_DiagonalChunkCoord2 = coords_chunks[3].x - 1;
+      Mov_DiagonalBorderBiom1 = border_biom_xpos + 1;
+      Mov_DiagonalBorderBiom2 = border_biom_xpos - size_zone_biomes;
+      Mov_IDBiomesArray = 2;
+      Mov_CoeffX = 0;
+      Mov_CoeffY = 1;
+      Mov_BiomCoeffX1 = 1;
+      Mov_BiomCoeffY1 = 1;
+      Mov_BiomCoeffX2 = -1;
+      Mov_BiomCoeffY2 = 1;
+    break;
+    // down direction
+    case 4:
+      Mov_increase = false;
+      Mov_horizontal = false;
+
+      Mov_pos = ypos - 1;
+      Mov_border = border_chunk_ypos - size_zone;
+
+      Mov_BorderBiom = border_biom_ypos - size_zone_biomes;
+      Mov_BorderChunkCoord = coords_chunks[5].y - 1;
+      Mov_CenterChunkCoord = coords_chunks[0].y - 1;
+      Mov_DiagonalChunkCoord1 = coords_chunks[7].x + 1;
+      Mov_DiagonalChunkCoord2 = coords_chunks[3].x - 1;
+      Mov_DiagonalBorderBiom1 = border_biom_xpos + 1;
+      Mov_DiagonalBorderBiom2 = border_biom_xpos - size_zone_biomes;
+      Mov_IDBiomesArray = 2;
+      Mov_CoeffX = 0;
+      Mov_CoeffY = -1;
+      Mov_BiomCoeffX1 = 1;
+      Mov_BiomCoeffY1 = -1;
+      Mov_BiomCoeffX2 = -1;
+      Mov_BiomCoeffY2 = -1;
     break;
   }
 
@@ -300,23 +432,17 @@ void MoveChunks(bool horizontal, bool increase){
       }
     }
 
-        // if next coordinate x of center chunk placed in next biome zone
-        if ((coords_chunks[0].x + Mov_CoeffX) == ()){
-          // increase coordinates of biome zone
-          coords_biomes[0].x++;
-          // redefine biome zones
-          tmp_biomes[0] = loaded_biomes[0];
-          loaded_biomes[0] = loaded_biomes[1];
-          loaded_biomes[1] = tmp_biomes[0];
-        }
-
-        // changing of position and content of loaded into memory chunks
-        MoveChunks(true, true);
-      }
-      // increase camera and tile coordinates
-      xpos_cam += scale;
-      xpos++;
-}*/
+    // if next coordinate x of center chunk placed in next biome zone
+    if (Mov_CenterChunkCoord == Mov_BorderBiom){
+      // changing coordinates of biome zone
+      MoveBiomes(Mov_horizontal, Mov_increase);
+    }
+    // changing of position and content of loaded into memory chunks
+    MoveChunks(Mov_horizontal, Mov_increase);
+  }
+  // changing camera and tile coordinates
+  MoveCamera(Mov_horizontal, Mov_increase);
+}
 
 // repainting OpenGL by reshape window
 void Reshape(GLsizei Width, GLsizei Height){
@@ -440,6 +566,7 @@ void ExtKeyboard(int key, int x, int y){
       // increase camera and tile coordinates
       xpos_cam += scale;
       xpos++;
+      //ProcessMoving(0);
     break;
 
     // key right arrow
@@ -469,6 +596,7 @@ void ExtKeyboard(int key, int x, int y){
       // increase camera and tile coordinates
       xpos_cam -= scale;
       xpos--;
+      //ProcessMoving(1);
     break;
 
     // key up arrow
@@ -498,6 +626,7 @@ void ExtKeyboard(int key, int x, int y){
       // increase camera and tile coordinates
       ypos_cam += scale;
       ypos++;
+      //ProcessMoving(2);
     break;
 
     // key down arrow
@@ -527,6 +656,7 @@ void ExtKeyboard(int key, int x, int y){
       // increase camera and tile coordinates
       ypos_cam -= scale;
       ypos--;
+      //ProcessMoving(3);
     break;
   }
 }
@@ -537,8 +667,9 @@ void Idle(){
 int main(int argc, char *argv[]){
   // getting seed
   // loading world
-  std::cout << "Enter seed:";
-  std::cin >> str_seed;
+  /*std::cout << "Enter seed:";
+  std::cin >> str_seed;*/
+  str_seed = "li34b5hj213h452b34k5b/123;l4n5";
 
   // initializing and create window GLUT
   glutInit(&argc, argv);

@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1435994438 source:/home/jatstudio/Projects/evolution/main.cpp
+1436529320 source:/home/jatstudio/Projects/evolution/main.cpp
 	<cstdlib>
 	<cstring>
 	<iostream>
 	<array>
-	<GL/glut.h>
-	<IL/il.h>
-	<IL/ilu.h>
+	"GL/glut.h"
+	"IL/il.h"
+	"IL/ilu.h"
 	"worldgen.h"
 	"engine.h"
 
@@ -164,7 +164,7 @@
 
 1431683189 D
 
-1435994030 source:/home/jatstudio/Projects/evolution/worldgen.cpp
+1436528633 source:/home/jatstudio/Projects/evolution/worldgen.cpp
 	<cstdlib>
 	<iostream>
 	<array>
