@@ -5,12 +5,12 @@
 
 /*My library*/
 #include "worldgen.h"
-
+using namespace std;
 // string >> char_codes >> string
-std::string StrToInt(std::string str){
+string StrToInt(string str){
   unsigned short int length = str.length();
   char buffer[3];
-  std::string str_out;
+  string str_out;
   for (unsigned short int i = 0; i < length; i++){
     sprintf(buffer,"%d", (int)str[i]);
     str_out += buffer;
@@ -24,7 +24,7 @@ unsigned int RotateLeft(unsigned int value, int count){
 }
 
 // function for calculating hash
-unsigned int CalcSubHash(unsigned int value, std::string buf, int index){
+unsigned int CalcSubHash(unsigned int value, string buf, int index){
   unsigned int read_value = stoi(buf.substr(index, 4));
   value += read_value * PRIME32_2;
   value = RotateLeft(value, 13);
@@ -33,7 +33,7 @@ unsigned int CalcSubHash(unsigned int value, std::string buf, int index){
 }
 
 // function for calculating hash
-unsigned int GetHash(std::string input){
+unsigned int GetHash(string input){
   unsigned int seed = 0;
   unsigned int h32;
   unsigned short int index = 0;
@@ -81,7 +81,7 @@ unsigned int GetHash(std::string input){
 }
 
 // generating ID Biomes
-tag_biomes LoadBiomes(std::string seed, std::string coords){
+tag_biomes LoadBiomes(string seed, string coords){
   tag_biomes biomes_temp[1];
   unsigned short int percent;
 
@@ -123,7 +123,7 @@ tag_tiles GenerateField(unsigned short int x, unsigned short int y, unsigned sho
 }
 
 // function for generate current chunk
-tag_tiles LoadChunk(std::string seed, std::string coords, unsigned short int id_biome){
+tag_tiles LoadChunk(string seed, string coords, unsigned short int id_biome){
   tag_tiles tiles[1];
 
   // size zone for calculating collision of chunks with different biomes

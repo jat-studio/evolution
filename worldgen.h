@@ -1,6 +1,6 @@
 #ifndef WORLDGEN_H_INCLUDED
 #define WORLDGEN_H_INCLUDED
-
+using namespace std;
 /*#######################   variables   #######################*/
 // size of chunk
 const unsigned short int size_zone = 64;
@@ -28,10 +28,10 @@ struct tag_biomes{
 
 /*#######################   functions   #######################*/
 // string >> char_codes >> string
-std::string StrToInt(std::string str);
+string StrToInt(string str);
 // function for loading id biomes of chunks into memory
-tag_biomes LoadBiomes(std::string seed, std::string coords);
+tag_biomes LoadBiomes(string seed, string coords);
 // function for loading id of tiles of current chunk into memory
-tag_tiles LoadChunk(std::string seed, std::string coords, unsigned short int id_biome);
+tag_tiles LoadChunk(string seed, string coords, unsigned short int id_biome);
 
 #endif

@@ -6,10 +6,11 @@
  */
 #include "minini/minIni.h"
 #include <vector>
+using namespace std;
 #ifndef CONFIG_H
 #define	CONFIG_H
 
-const std::string mainini = "evolution.ini";
+const string mainini = "evolution.ini";
 minIni OpenIniFile(const std::string mainini);
 std::string getTextureIni(minIni ini);
 std::vector<std::string> getTextureList(std::string ini);
