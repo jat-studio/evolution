@@ -127,13 +127,31 @@ tag_tiles LoadChunk(string seed, string coords, unsigned short int id_biome){
   tag_tiles tiles[1];
 
   // size zone for calculating collision of chunks with different biomes
-  //unsigned short int size_collide = 1;
-  //if ((size_zone / 4) > 1) size_collide = size_zone / 4;
+  /*unsigned short int size_collide = 1;
+  if ((size_zone / 4) > 1) size_collide = size_zone / 4;*/
 
   // generate current chunk
   seed += coords;
   srand(GetHash(seed));
   tiles[0] = GenerateField(0, 0, size_zone, size_zone, id_biome);
+  /*// generate center part of chunk
+  tiles[0] = GenerateField();
+  // generate up part of chunk
+  tiles[0] = GenerateField();
+  // generate up-right part of chunk
+  tiles[0] = GenerateField();
+  // generate right part of chunk
+  tiles[0] = GenerateField();
+  // generate down-right part of chunk
+  tiles[0] = GenerateField();
+  // generate down part of chunk
+  tiles[0] = GenerateField();
+  // generate down-left part of chunk
+  tiles[0] = GenerateField();
+  // generate left part of chunk
+  tiles[0] = GenerateField();
+  // generate up-left part of chunk
+  tiles[0] = GenerateField();*/
 
   return tiles[0];
 }

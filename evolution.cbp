@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/evolution" prefix_auto="1" extension_auto="1" />
+				<Option output="evolution" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="/usr/bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
@@ -17,7 +17,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/evolution" prefix_auto="1" extension_auto="1" />
+				<Option output="evolution" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="/usr/bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
@@ -77,9 +77,30 @@
 		<Unit filename="IL/ilu.h" />
 		<Unit filename="IL/ilu_region.h" />
 		<Unit filename="IL/ilut.h" />
+		<Unit filename="config.cpp" />
+		<Unit filename="config.h" />
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="minini/minGlue-FatFs.h" />
+		<Unit filename="minini/minGlue-ccs.h" />
+		<Unit filename="minini/minGlue-efsl.h" />
+		<Unit filename="minini/minGlue-ffs.h" />
+		<Unit filename="minini/minGlue-mdd.h" />
+		<Unit filename="minini/minGlue-stdio.h" />
+		<Unit filename="minini/minGlue.h" />
+		<Unit filename="minini/minIni.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="minini/minIni.h" />
+		<Unit filename="minini/test.c">
+			<Option compilerVar="CC" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="minini/test2.cc">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="minini/wxMinIni.h" />
 		<Unit filename="worldgen.cpp" />
 		<Unit filename="worldgen.h" />
 		<Extensions>
