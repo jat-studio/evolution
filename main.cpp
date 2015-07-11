@@ -153,49 +153,41 @@ void DrawPlayer() {
 
 // function for getting id biome from array using on input coordinates of chunk
 
-unsigned short int GetIDBiome(int x, int y) {
-    /*Необходимо выдавать на основе координат чанков порядковые номера в массивах*/
+unsigned short int GetIDBiome(int x, int y, unsigned short int id_chunk) {
+    // modify coordinates into array id's
+    short int coeff_x = ((x + (size_zone_biomes / 2) - 1) -
+                                  (size_zone_biomes * coords_biomes[0].x));
+    short int coeff_y = ((y + (size_zone_biomes / 2) - 1) -
+                                  (size_zone_biomes * coords_biomes[0].y));
+    // finding correct array biomes
+    unsigned short int id_array_biomes = 0;
 
-    // change of coordinates for convenience
-    short int coeff_x = x + (size_zone_biomes / 2) - 1;
-    short int coeff_y = y + (size_zone_biomes / 2) - 1;
-    // if coordinate x ranges in array loaded_biomes[0]
-    if ((coeff_x >= 0) and (coeff_x < size_zone_biomes)) {
-        // if coordinate y ranges in array loaded_biomes[0]
-        if ((coeff_y >= 0) and (coeff_y < size_zone_biomes)) {
-            x = coeff_x;
-            y = coeff_y;
-            return loaded_biomes[0].biome_id[x][y];
-        }// if coordinate y has run out of array loaded_biomes[0]
-        else {
-            // redefining y coordinate of chunk to id next array
-            if (coeff_y < 0) {
-                y = coeff_x + size_zone_biomes;
-            } else {
-                y = coeff_y - size_zone_biomes;
-            }
-            x = coeff_x;
-            return loaded_biomes[2].biome_id[x][y];
-        }
-    }// if coordinate x has run out of array loaded_biomes[0]
-    else {
-        // redefining x coordinate of chunk to id next array
-        if (coeff_x < 0) {
-            x = coeff_x + size_zone_biomes;
-        } else {
-            x = coeff_x - size_zone_biomes;
-        }
-        y = coeff_y;
-        return loaded_biomes[1].biome_id[x][y];
+    // horizontal border
+    if ((coeff_x < 0) or (coeff_x >= size_zone_biomes)){
+      id_array_biomes = 1;
+      if ((coeff_y < 0) or (coeff_y >= size_zone_biomes)){
+        id_array_biomes = 3;
+      }
     }
+
+    // vertical border
+    if ((coeff_y < 0) or (coeff_y >= size_zone_biomes)){
+      id_array_biomes = 1;
+      if ((coeff_x < 0) or (coeff_x >= size_zone_biomes)){
+        id_array_biomes = 3;
+      }
+    }
+
+    // return ID Biome
+    return loaded_biomes[id_array_biomes].biome_id[coeff_x][coeff_y];
 }
 
 // loading three chunks
 
 void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C) {
-    loaded_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_A.x) + to_string(coords_chunks_A.y)), GetIDBiome(coords_chunks_A.x, coords_chunks_A.y));
-    loaded_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_B.x) + to_string(coords_chunks_B.y)), GetIDBiome(coords_chunks_B.x, coords_chunks_B.y));
-    loaded_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_C.x) + to_string(coords_chunks_C.y)), GetIDBiome(coords_chunks_C.x, coords_chunks_C.y));
+    loaded_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_A.x) + to_string(coords_chunks_A.y)), GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
+    loaded_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_B.x) + to_string(coords_chunks_B.y)), GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
+    loaded_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_C.x) + to_string(coords_chunks_C.y)), GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
 }
 
 // moving and generate chunks
@@ -276,9 +268,11 @@ void MoveBiomes(bool horizontal, bool increase){
   if (horizontal){
     if (increase){
       coords_biomes[0].x++;
+      border_biom_xpos += size_zone_biomes;
     }
     else{
       coords_biomes[0].x--;
+      border_biom_xpos -= size_zone_biomes;
     }
     tmp_biomes[0] = loaded_biomes[0];
     loaded_biomes[0] = loaded_biomes[1];
@@ -291,9 +285,11 @@ void MoveBiomes(bool horizontal, bool increase){
   else{
     if (increase){
       coords_biomes[0].y++;
+      border_biom_ypos += size_zone_biomes;
     }
     else{
       coords_biomes[0].y--;
+      border_biom_ypos -= size_zone_biomes;
     }
     tmp_biomes[0] = loaded_biomes[0];
     loaded_biomes[0] = loaded_biomes[2];
@@ -555,14 +551,6 @@ void Draw() {
   print_str2 += std::to_string(coords_biomes[0].y);
   Scene.DrawStaticString(-0.99, 0.83, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str2);
 
-  // drawing border biomes
-  std::string print_str3;
-  print_str3 = "Xbl: ";
-  print_str3 += std::to_string(border_biom_xpos);
-  print_str3 += "; Xbr: ";
-  print_str3 += std::to_string(border_biom_xpos - size_zone_biomes);
-  Scene.DrawStaticString(-0.99, 0.79, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str3);
-
   Scene.setPerspectiveProjection();
 
   glutSwapBuffers();
@@ -602,15 +590,11 @@ void ExtKeyboard(int key, int x, int y){
   }
 }
 
-void Idle() {
-}
-
 int main(int argc, char *argv[]) {
 
     minIni ini = OpenIniFile(mainini);
     string s= getTextureIni(ini);
     vector<string> texturelist= getTextureList(s);
-
 
     // getting seed
     // loading world
@@ -623,31 +607,22 @@ int main(int argc, char *argv[]) {
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutInitWindowPosition(0, 0);
     glutInitWindowSize(640, 480);
-    wnd = glutCreateWindow("Evolution 0.0.8");
+    wnd = glutCreateWindow("Evolution 0.1.0");
 
     // initializing coordinates of biomes zones
     coords_biomes[0].x = 0;
     coords_biomes[0].y = 0;
 
     // initializing coordinates of chunks
-    coords_chunks[0].x = 0;
-    coords_chunks[0].y = 0;
-    coords_chunks[1].x = 0;
-    coords_chunks[1].y = 1;
-    coords_chunks[2].x = -1;
-    coords_chunks[2].y = 1;
-    coords_chunks[3].x = -1;
-    coords_chunks[3].y = 0;
-    coords_chunks[4].x = -1;
-    coords_chunks[4].y = -1;
-    coords_chunks[5].x = 0;
-    coords_chunks[5].y = -1;
-    coords_chunks[6].x = 1;
-    coords_chunks[6].y = -1;
-    coords_chunks[7].x = 1;
-    coords_chunks[7].y = 0;
-    coords_chunks[8].x = 1;
-    coords_chunks[8].y = 1;
+    coords_chunks[0].x = 0;     coords_chunks[0].y = 0;
+    coords_chunks[1].x = 0;     coords_chunks[1].y = 1;
+    coords_chunks[2].x = -1;    coords_chunks[2].y = 1;
+    coords_chunks[3].x = -1;    coords_chunks[3].y = 0;
+    coords_chunks[4].x = -1;    coords_chunks[4].y = -1;
+    coords_chunks[5].x = 0;     coords_chunks[5].y = -1;
+    coords_chunks[6].x = 1;     coords_chunks[6].y = -1;
+    coords_chunks[7].x = 1;     coords_chunks[7].y = 0;
+    coords_chunks[8].x = 1;     coords_chunks[8].y = 1;
 
     // coordinates and borders
     xpos = 0;
@@ -659,36 +634,16 @@ int main(int argc, char *argv[]) {
     // loading world
     int_seed = StrToInt(str_seed);
     loaded_biomes[0] = LoadBiomes(int_seed, StrToInt("00"));
-    LoadThreeChunks({0, 1, 2},
-    {
-        0, 0
-    },
-    {
-        0, 1
-    },
-    {
-        1, 1
-    });
-    LoadThreeChunks({3, 4, 5},
-    {
-        1, 0
-    },
-    {
-        1, -1
-    },
-    {
-        0, -1
-    });
-    LoadThreeChunks({6, 7, 8},
-    {
-        -1, -1
-    },
-    {
-        -1, 0
-    },
-    {
-        -1, 1
-    });
+
+    loaded_tiles[0] = LoadChunk(int_seed, StrToInt("00"), GetIDBiome(0, 0, 0));
+    loaded_tiles[1] = LoadChunk(int_seed, StrToInt("01"), GetIDBiome(0, 1, 1));
+    loaded_tiles[2] = LoadChunk(int_seed, StrToInt("-11"), GetIDBiome(-1, 1, 2));
+    loaded_tiles[3] = LoadChunk(int_seed, StrToInt("-10"), GetIDBiome(-1, 0, 3));
+    loaded_tiles[4] = LoadChunk(int_seed, StrToInt("-1-1"), GetIDBiome(-1, -1, 4));
+    loaded_tiles[5] = LoadChunk(int_seed, StrToInt("0-1"), GetIDBiome(0, -1, 5));
+    loaded_tiles[6] = LoadChunk(int_seed, StrToInt("1-1"), GetIDBiome(1, -1, 6));
+    loaded_tiles[7] = LoadChunk(int_seed, StrToInt("10"), GetIDBiome(1, 0, 7));
+    loaded_tiles[8] = LoadChunk(int_seed, StrToInt("11"), GetIDBiome(1, 1, 8));
 
     // load Textures
     LoadTextures(texturelist);
