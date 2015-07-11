@@ -193,6 +193,7 @@ void MoveChunks(bool horizontal, bool increase){
     coords_chunks[6].x += coeff;
     coords_chunks[7].x += coeff;
     coords_chunks[8].x += coeff;
+    border_chunk_xpos += (coeff * size_zone);
   }
   else{
     if (increase){
@@ -214,6 +215,7 @@ void MoveChunks(bool horizontal, bool increase){
     coords_chunks[6].y += coeff;
     coords_chunks[7].y += coeff;
     coords_chunks[8].y += coeff;
+    border_chunk_ypos += (coeff * size_zone);
   }
 
   // redefining content of chunks
@@ -391,7 +393,7 @@ void ProcessMoving(unsigned short int direction){
       Mov_BiomCoeffY2 = 1;
     break;
     // down direction
-    case 4:
+    case 3:
       Mov_increase = false;
       Mov_horizontal = false;
 
@@ -516,6 +518,14 @@ void Draw(){
   print_str2 += std::to_string(coords_biomes[0].y);
   Scene.DrawStaticString(-0.99, 0.83, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str2);
 
+  // drawing border biomes
+  std::string print_str3;
+  print_str3 = "Xbl: ";
+  print_str3 += std::to_string(border_biom_xpos);
+  print_str3 += "; Xbr: ";
+  print_str3 += std::to_string(border_biom_xpos - size_zone_biomes);
+  Scene.DrawStaticString(-0.99, 0.79, 0.0, GLUT_BITMAP_TIMES_ROMAN_24, print_str3);
+
   Scene.setPerspectiveProjection();
 
   glutSwapBuffers();
@@ -537,126 +547,19 @@ void ExtKeyboard(int key, int x, int y){
   switch (key){
     // key left arrow
     case GLUT_KEY_LEFT:
-      // if next coordinate x placed in next chunk
-      if (CalculateBorder(xpos, size_zone, true)){
-
-        // if next coordinate x of left chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[7].x, size_zone_biomes, true)){
-          // load next horizontal biome zone ([1])
-          loaded_biomes[1] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x + 1) + std::to_string(coords_biomes[0].y)));
-          // load next diagonal biome zone ([3])
-          if (CalculateBorder(coords_chunks[7].x, size_zone_biomes, true)){
-            loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
-          }
-        }
-
-        // if next coordinate x of center chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[0].x, size_zone_biomes, true)){
-          // increase coordinates of biome zone
-          coords_biomes[0].x++;
-          // redefine biome zones
-          tmp_biomes[0] = loaded_biomes[0];
-          loaded_biomes[0] = loaded_biomes[1];
-          loaded_biomes[1] = tmp_biomes[0];
-        }
-
-        // changing of position and content of loaded into memory chunks
-        MoveChunks(true, true);
-      }
-      // increase camera and tile coordinates
-      xpos_cam += scale;
-      xpos++;
-      //ProcessMoving(0);
+      ProcessMoving(0);
     break;
-
     // key right arrow
     case GLUT_KEY_RIGHT:
-      // if next coordinate x placed in next chunk
-      if (CalculateBorder(xpos, size_zone, false)){
-
-        // if next coordinate x of left chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[3].x, size_zone_biomes, false)){
-          // load next horizontal biome zone ([1])
-          loaded_biomes[1] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
-        }
-
-        // if next coordinate x of center chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[0].x, size_zone_biomes, false)){
-          // increase coordinates of biome zone
-          coords_biomes[0].x--;
-          // redefine biome zones
-          tmp_biomes[0] = loaded_biomes[0];
-          loaded_biomes[0] = loaded_biomes[1];
-          loaded_biomes[1] = tmp_biomes[0];
-        }
-
-        // changing of position and content of loaded into memory chunks
-        MoveChunks(true, false);
-      }
-      // increase camera and tile coordinates
-      xpos_cam -= scale;
-      xpos--;
-      //ProcessMoving(1);
+      ProcessMoving(1);
     break;
-
     // key up arrow
     case GLUT_KEY_UP:
-      // if next coordinate y placed in next chunk
-      if (CalculateBorder(ypos, size_zone, true)){
-
-        // if next coordinate y of up chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[1].y, size_zone_biomes, true)){
-          // load next vertical biome zone ([2])
-          loaded_biomes[2] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
-        }
-
-        // if next coordinate y of center chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[0].y, size_zone_biomes, true)){
-          // increase coordinates of biome zone
-          coords_biomes[0].y++;
-          // redefine biome zones
-          tmp_biomes[0] = loaded_biomes[1];
-          loaded_biomes[1] = loaded_biomes[2];
-          loaded_biomes[2] = tmp_biomes[0];
-        }
-
-        // changing of position and content of loaded into memory chunks
-        MoveChunks(false, true);
-      }
-      // increase camera and tile coordinates
-      ypos_cam += scale;
-      ypos++;
-      //ProcessMoving(2);
+      ProcessMoving(2);
     break;
-
     // key down arrow
     case GLUT_KEY_DOWN:
-      // if next coordinate y placed in next chunk
-      if (CalculateBorder(ypos, size_zone, false)){
-
-        // if next coordinate y of down chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[5].y, size_zone_biomes, false)){
-          // load next vertical biome zone ([2])
-          loaded_biomes[2] = LoadBiomes(int_seed, StrToInt(std::to_string(coords_biomes[0].x) + std::to_string(coords_biomes[0].y)));
-        }
-
-        // if next coordinate y of center chunk placed in next biome zone
-        if (CalculateBorder(coords_chunks[0].y, size_zone_biomes, false)){
-          // increase coordinates of biome zone
-          coords_biomes[0].y--;
-          // redefine biome zones
-          tmp_biomes[0] = loaded_biomes[1];
-          loaded_biomes[1] = loaded_biomes[2];
-          loaded_biomes[2] = tmp_biomes[0];
-        }
-
-        // changing of position and content of loaded into memory chunks
-        MoveChunks(false, false);
-      }
-      // increase camera and tile coordinates
-      ypos_cam -= scale;
-      ypos--;
-      //ProcessMoving(3);
+      ProcessMoving(3);
     break;
   }
 }
@@ -737,4 +640,5 @@ int main(int argc, char *argv[]){
   // clear textures
   clearTextures();
   return 0;
+  ///////////////////////
 }

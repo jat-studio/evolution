@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="engine.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="engine.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="112" topLine="0" />
+			<Cursor1 position="2969" topLine="0" />
 		</Cursor>
 		<Folding>
-			<Collapse line="13" />
-			<Collapse line="17" />
-			<Collapse line="20" />
-			<Collapse line="24" />
-			<Collapse line="28" />
+			<Collapse line="4" />
+			<Collapse line="9" />
+			<Collapse line="23" />
+			<Collapse line="34" />
+			<Collapse line="37" />
+			<Collapse line="42" />
+			<Collapse line="54" />
+			<Collapse line="66" />
+			<Collapse line="87" />
+			<Collapse line="93" />
+			<Collapse line="98" />
 		</Folding>
+	</File>
+	<File name="GL/glut.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="565" topLine="0" />
+		</Cursor>
 	</File>
 	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="21016" topLine="84" />
+			<Cursor1 position="293" topLine="0" />
 		</Cursor>
 		<Folding>
 			<Collapse line="57" />
@@ -42,48 +53,34 @@
 			<Collapse line="197" />
 			<Collapse line="202" />
 			<Collapse line="235" />
+			<Collapse line="236" />
+			<Collapse line="237" />
+			<Collapse line="240" />
+			<Collapse line="251" />
+			<Collapse line="252" />
+			<Collapse line="255" />
 			<Collapse line="269" />
+			<Collapse line="270" />
+			<Collapse line="271" />
+			<Collapse line="275" />
+			<Collapse line="280" />
+			<Collapse line="281" />
+			<Collapse line="285" />
 			<Collapse line="298" />
 			<Collapse line="447" />
 			<Collapse line="458" />
+			<Collapse line="487" />
 			<Collapse line="524" />
+			<Collapse line="525" />
 			<Collapse line="535" />
 			<Collapse line="663" />
 		</Folding>
 	</File>
-	<File name="worldgen.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="336" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="20" />
-			<Collapse line="24" />
-		</Folding>
-	</File>
-	<File name="engine.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2969" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="4" />
-			<Collapse line="9" />
-			<Collapse line="23" />
-			<Collapse line="34" />
-			<Collapse line="37" />
-			<Collapse line="42" />
-			<Collapse line="54" />
-			<Collapse line="66" />
-			<Collapse line="87" />
-			<Collapse line="93" />
-			<Collapse line="98" />
-		</Folding>
-	</File>
 	<File name="worldgen.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2112" topLine="0" />
+			<Cursor1 position="273" topLine="0" />
 		</Cursor>
 		<Folding>
-			<Collapse line="9" />
 			<Collapse line="21" />
 			<Collapse line="26" />
 			<Collapse line="35" />
@@ -94,16 +91,27 @@
 			<Collapse line="67" />
 			<Collapse line="83" />
 			<Collapse line="105" />
-			<Collapse line="108" />
-			<Collapse line="109" />
-			<Collapse line="113" />
-			<Collapse line="116" />
 			<Collapse line="125" />
 		</Folding>
 	</File>
-	<File name="GL/glut.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="engine.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="565" topLine="0" />
+			<Cursor1 position="112" topLine="0" />
 		</Cursor>
+		<Folding>
+			<Collapse line="13" />
+			<Collapse line="17" />
+			<Collapse line="20" />
+			<Collapse line="24" />
+			<Collapse line="28" />
+		</Folding>
+	</File>
+	<File name="worldgen.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="843" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="20" />
+		</Folding>
 	</File>
 </CodeBlocks_layout_file>
