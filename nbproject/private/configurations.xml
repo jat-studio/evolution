@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="bin">
+      </df>
+      <df name="GL">
+        <df name="internal">
+          <in>dri_interface.h</in>
+          <in>glcore.h</in>
+        </df>
+        <in>GLee.h</in>
+        <in>freeglut.h</in>
+        <in>freeglut_ext.h</in>
+        <in>freeglut_std.h</in>
+        <in>gl.h</in>
+        <in>gl_mangle.h</in>
+        <in>glew.h</in>
+        <in>glext.h</in>
+        <in>glu.h</in>
+        <in>glu_mangle.h</in>
+        <in>glut.h</in>
+        <in>glx.h</in>
+        <in>glx_mangle.h</in>
+        <in>glxew.h</in>
+        <in>glxext.h</in>
+        <in>glxint.h</in>
+        <in>glxmd.h</in>
+        <in>glxproto.h</in>
+        <in>glxtokens.h</in>
+        <in>math_3d.h</in>
+        <in>wglew.h</in>
+      </df>
+      <df name="IL">
+        <in>devil_cpp_wrapper.hpp</in>
+        <in>il.h</in>
+        <in>ilu.h</in>
+        <in>ilu_region.h</in>
+        <in>ilut.h</in>
+      </df>
+      <df name="minini">
+        <in>minGlue-FatFs.h</in>
+        <in>minGlue-ccs.h</in>
+        <in>minGlue-efsl.h</in>
+        <in>minGlue-ffs.h</in>
+        <in>minGlue-mdd.h</in>
+        <in>minGlue-stdio.h</in>
+        <in>minGlue.h</in>
+        <in>minIni.c</in>
+        <in>minIni.h</in>
+        <in>test.c</in>
+        <in>test2.cc</in>
+        <in>wxMinIni.h</in>
+      </df>
+      <df name="obj">
+        <df name="Debug">
+        </df>
+        <df name="Release">
+        </df>
+      </df>
+      <df name="res">
+        <df name="config">
+        </df>
+        <df name="imgs">
+        </df>
+      </df>
+      <in>config.cpp</in>
+      <in>config.h</in>
+      <in>engine.cpp</in>
+      <in>engine.h</in>
+      <in>main.cpp</in>
+      <in>worldgen.cpp</in>
+      <in>worldgen.h</in>
+    </df>
+    <itemPath>Makefile</itemPath>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

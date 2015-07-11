@@ -1,3 +1,4 @@
+using namespace std;
 #ifndef ENGINE_H_INCLUDED
 #define ENGINE_H_INCLUDED
 
@@ -32,7 +33,7 @@ class ClassScene{
       glEnable(GL_BLEND);
     }
     // output string
-    void DrawStaticString(float x, float y, float z, void *font, std::string input){
+    void DrawStaticString(float x, float y, float z, void *font, string input){
       glRasterPos3f(x, y, z);
       unsigned short int len = input.length();
       for(unsigned short int i = 0; i < len; i++){
@@ -54,7 +55,7 @@ class ClassScene{
       int err = ilGetError();
       if (err != IL_NO_ERROR){
         const char *strError = iluErrorString(err);
-        std::cout << "Error loading texture!\n" << texName << "\n" << strError << "\n";
+        cout << "Error loading texture!\n" << texName << "\n" << strError << "\n";
         exit(EXIT_FAILURE);
       }
       // getting parameters of image
