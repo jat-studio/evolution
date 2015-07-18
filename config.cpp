@@ -1,7 +1,8 @@
+using namespace std;
 #include "minini/minIni.h"
 #include <iostream>
 #include <vector>
-using namespace std;
+
 //Открытие ini файлов
 minIni OpenIniFile(const string mainini) {
     minIni ini(mainini);
@@ -40,5 +41,5 @@ vector<string> getTextureList(string ini){
         textures.insert(textures.end(),value);
     }
   }
-  return textures;   
+  return textures;
 }

@@ -1,6 +1,6 @@
+using namespace std;
 #ifndef WORLDGEN_H_INCLUDED
 #define WORLDGEN_H_INCLUDED
-using namespace std;
 /*#######################   variables   #######################*/
 // size of chunk
 const unsigned short int size_zone = 64;

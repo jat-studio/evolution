@@ -1,4 +1,5 @@
-/* 
+using namespace std;
+/*
  * File:   config.h
  * Author: shadowmaster63
  *
@@ -6,7 +7,7 @@
  */
 #include "minini/minIni.h"
 #include <vector>
-using namespace std;
+
 #ifndef CONFIG_H
 #define	CONFIG_H
 

@@ -1,3 +1,4 @@
+using namespace std;
 /*Basic c library*/
 #include <cstdlib>
 #include <iostream>
@@ -5,7 +6,7 @@
 
 /*My library*/
 #include "worldgen.h"
-using namespace std;
+
 // string >> char_codes >> string
 string StrToInt(string str){
   unsigned short int length = str.length();
