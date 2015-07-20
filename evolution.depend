@@ -223,8 +223,9 @@
 1387209253 /home/jatstudio/Projects/evolution/IL/ilu.h
 	<IL/il.h>
 
-1437223287 source:/home/jatstudio/Projects/work_evolution/engine.cpp
+1437378496 source:/home/jatstudio/Projects/work_evolution/engine.cpp
 	<iostream>
+	<array>
 	<vector>
 	"GL/glut.h"
 	"IL/il.h"
@@ -251,26 +252,21 @@
 1436600467 /home/jatstudio/Projects/work_evolution/IL/ilu.h
 	<IL/il.h>
 
-1437222310 /home/jatstudio/Projects/work_evolution/engine.h
+1437378208 /home/jatstudio/Projects/work_evolution/engine.h
 
-1437223116 source:/home/jatstudio/Projects/work_evolution/main.cpp
-	<cstdlib>
+1437378439 source:/home/jatstudio/Projects/work_evolution/main.cpp
 	<cstring>
 	<iostream>
-	<array>
 	<vector>
 	"GL/glut.h"
 	"IL/il.h"
 	"IL/ilu.h"
 	"worldgen.h"
 	"engine.h"
-	<unistd.h>
-	<linux/limits.h>
-	<typeinfo>
 	"config.h"
 	"minini/minIni.h"
 
-1437220276 /home/jatstudio/Projects/work_evolution/worldgen.h
+1437373145 /home/jatstudio/Projects/work_evolution/worldgen.h
 
 1424883222 /usr/include/unistd.h
 	<features.h>

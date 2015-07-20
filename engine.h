@@ -28,6 +28,16 @@ bool CalculateBorder(int pos, unsigned short int zone, bool increase);
 
 /*#######################   classes   #######################*/
 class ClassScene{
+  private:
+    // loading three chunks
+    void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C);
+    // moving and generate chunks
+    // parameters: horizontal moving or not and increase or decrease coordinates
+    void MoveChunks(bool horizontal, bool increase);
+    // moving camera
+    void MoveCamera(bool horizontal, bool increase);
+    // moving biome zones
+    void MoveBiomes(bool horizontal, bool increase);
   public:
     static const unsigned short int count_tex = 6; // count of textures
     GLuint tiles_tex[count_tex]; // index texture of tiles
@@ -55,34 +65,61 @@ class ClassScene{
     tag_coords_chunks coords_chunks[9];
     // loaded into memory tiles
     tag_tiles loaded_tiles[num_zones];
+    // three biome zones (current vertical, horizontal and diagonal next zone)
+    tag_biomes loaded_biomes[4];
+    // temporary structure for redefine loaded_biomes
+    tag_biomes tmp_biomes[1];
+
+    // parameters for load and generate world with seed
+    string str_seed, int_seed;
 
     // loading texture by filename
     void LoadTextureImage(const char *texName, GLuint texture);
     // enter to ortho mode
-    void setOrthographicProjection();
+    void setOrthoProjection(GLsizei Width, GLsizei Height);
     // exit of ortho mode
     void setPerspectiveProjection();
     //drawing chunk
     void DrawChunk(unsigned short int index, int x, int y);
     // output string
     void DrawStaticString(float x, float y, float z, void *font, string input);
+    //drawing player
+    void DrawPlayer();
     // repainting OpenGL by reshape window
     void Reshape(GLsizei Width, GLsizei Height);
     // loading textures
     void LoadTextures(vector<string> texturelist);
     // deleting textures
     void ClearTextures();
+    /*processing move camera
+      variable direction:
+      0 - left
+      1 - right
+      2 - up
+      3 - down*/
+    void ProcessMoving(unsigned short int direction);
+    // function for getting id biome from array using on input coordinates of chunk
+    unsigned short int GetIDBiome(int x, int y, unsigned short int id_chunk);
+
+    // friendly classes
+    friend class ClassConsole;
 };
 
-class ClassConsole: public ClassScene{
+class ClassConsole{
   public:
+    // fps calculating parameters
     int fps;
     long t, dt;
     string fps_str;
+    // pressed key
     string current_key;
+    // console visible state
+    bool visible = false;
 
     // painting Console
-    void Draw(unsigned short int console, unsigned short int wnd);
+    void Draw(ClassScene &object, unsigned short int console, unsigned short int wnd);
+    // set 2d mode
+    void Reshape(GLsizei Width, GLsizei Height);
 };
 
 #endif
