@@ -20,11 +20,14 @@ struct tag_coords_chunks{
   int x;
   int y;
 };
-
-/*#######################   functions   #######################*/
-// calculating left or up border current chunk or biome zone
-// and compare it to next coordinate
-bool CalculateBorder(int pos, unsigned short int zone, bool increase);
+// structure for loading textures
+/*struct tag_textures{
+  GLuint surface[]
+  creatures
+  player
+  gui
+  fx
+};*/
 
 /*#######################   classes   #######################*/
 class ClassScene{
@@ -91,6 +94,8 @@ class ClassScene{
     void LoadTextures(vector<string> texturelist);
     // deleting textures
     void ClearTextures();
+    // painting Scene
+    void Draw();
     /*processing move camera
       variable direction:
       0 - left

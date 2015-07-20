@@ -48,29 +48,8 @@ void SceneReshape(GLsizei Width, GLsizei Height){
 }
 
 // painting Scene
-void Draw(){
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-    gluLookAt(Scene.xpos_cam, Scene.ypos_cam, -6.0,
-            Scene.xpos_cam, Scene.ypos_cam, 1.0,
-            0.0, 1.0, 0.0);
-
-    // painting world
-    glScalef(scale, scale, 0.0);
-
-    Scene.DrawChunk(0, Scene.coords_chunks[0].x, Scene.coords_chunks[0].y);
-    Scene.DrawChunk(1, Scene.coords_chunks[1].x, Scene.coords_chunks[1].y);
-    Scene.DrawChunk(2, Scene.coords_chunks[2].x, Scene.coords_chunks[2].y);
-    Scene.DrawChunk(3, Scene.coords_chunks[3].x, Scene.coords_chunks[3].y);
-    Scene.DrawChunk(4, Scene.coords_chunks[4].x, Scene.coords_chunks[4].y);
-    Scene.DrawChunk(5, Scene.coords_chunks[5].x, Scene.coords_chunks[5].y);
-    Scene.DrawChunk(6, Scene.coords_chunks[6].x, Scene.coords_chunks[6].y);
-    Scene.DrawChunk(7, Scene.coords_chunks[7].x, Scene.coords_chunks[7].y);
-    Scene.DrawChunk(8, Scene.coords_chunks[8].x, Scene.coords_chunks[8].y);
-
-    Scene.DrawPlayer();
-
-    glutSwapBuffers();
+void SceneDraw(){
+  Scene.Draw();
 }
 
 // repainting OpenGL by reshape window
@@ -129,7 +108,7 @@ void ExtKeyboard(int key, int x, int y){
 }
 
 void Idle(){
-  Draw();
+  SceneDraw();
   ConsoleDraw();
 }
 
@@ -193,7 +172,7 @@ int main(int argc, char *argv[]) {
     Scene.LoadTextures(texturelist);
 
     // defining events of window
-    glutDisplayFunc(Draw);
+    glutDisplayFunc(SceneDraw);
     glutReshapeFunc(SceneReshape);
     glutIdleFunc(Idle);
     glutKeyboardFunc(Keyboard);

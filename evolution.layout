@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="config.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="engine.h" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="163" topLine="0" />
+			<Cursor1 position="570" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="7" />
+			<Collapse line="13" />
+			<Collapse line="18" />
+			<Collapse line="98" />
+			<Collapse line="112" />
+		</Folding>
+	</File>
+	<File name="minini/test.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="514" topLine="76" />
 		</Cursor>
 	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5604" topLine="36" />
+			<Cursor1 position="5316" topLine="30" />
 		</Cursor>
 		<Folding>
 			<Collapse line="32" />
 			<Collapse line="45" />
 			<Collapse line="50" />
+			<Collapse line="55" />
+			<Collapse line="60" />
+			<Collapse line="65" />
+			<Collapse line="88" />
+			<Collapse line="109" />
+			<Collapse line="122" />
 		</Folding>
 	</File>
 	<File name="worldgen.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -30,16 +48,6 @@
 			<Collapse line="126" />
 		</Folding>
 	</File>
-	<File name="minini/test2.cc" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="234" topLine="39" />
-		</Cursor>
-	</File>
-	<File name="engine.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2943" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="GL/glut.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="565" topLine="0" />
@@ -50,28 +58,6 @@
 			<Cursor1 position="385" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="minini/test.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="514" topLine="76" />
-		</Cursor>
-	</File>
-	<File name="engine.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="17387" topLine="43" />
-		</Cursor>
-		<Folding>
-			<Collapse line="17" />
-			<Collapse line="21" />
-			<Collapse line="24" />
-			<Collapse line="28" />
-			<Collapse line="32" />
-			<Collapse line="40" />
-			<Collapse line="55" />
-			<Collapse line="67" />
-			<Collapse line="72" />
-			<Collapse line="73" />
-		</Folding>
-	</File>
 	<File name="GL/glew.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="661118" topLine="13295" />
@@ -80,6 +66,79 @@
 	<File name="config.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="20" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="minini/test2.cc" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="234" topLine="39" />
+		</Cursor>
+	</File>
+	<File name="engine.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="299" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="17" />
+			<Collapse line="32" />
+			<Collapse line="44" />
+			<Collapse line="72" />
+			<Collapse line="75" />
+			<Collapse line="81" />
+			<Collapse line="93" />
+			<Collapse line="105" />
+			<Collapse line="124" />
+			<Collapse line="132" />
+			<Collapse line="140" />
+			<Collapse line="145" />
+			<Collapse line="171" />
+			<Collapse line="182" />
+			<Collapse line="199" />
+			<Collapse line="209" />
+			<Collapse line="211" />
+			<Collapse line="217" />
+			<Collapse line="219" />
+			<Collapse line="229" />
+			<Collapse line="237" />
+			<Collapse line="241" />
+			<Collapse line="242" />
+			<Collapse line="247" />
+			<Collapse line="263" />
+			<Collapse line="264" />
+			<Collapse line="269" />
+			<Collapse line="297" />
+			<Collapse line="300" />
+			<Collapse line="303" />
+			<Collapse line="309" />
+			<Collapse line="310" />
+			<Collapse line="311" />
+			<Collapse line="315" />
+			<Collapse line="320" />
+			<Collapse line="321" />
+			<Collapse line="325" />
+			<Collapse line="333" />
+			<Collapse line="334" />
+			<Collapse line="335" />
+			<Collapse line="339" />
+			<Collapse line="351" />
+			<Collapse line="352" />
+			<Collapse line="356" />
+			<Collapse line="376" />
+			<Collapse line="400" />
+			<Collapse line="496" />
+			<Collapse line="498" />
+			<Collapse line="504" />
+			<Collapse line="507" />
+			<Collapse line="513" />
+			<Collapse line="526" />
+			<Collapse line="529" />
+			<Collapse line="532" />
+			<Collapse line="543" />
+			<Collapse line="582" />
+		</Folding>
+	</File>
+	<File name="config.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="163" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

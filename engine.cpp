@@ -13,29 +13,6 @@ using namespace std;
 #include "worldgen.h"
 #include "engine.h"
 
-// calculating left or up border current chunk or biome zone
-// and compare it to next coordinate
-bool CalculateBorder(int pos, unsigned short int zone, bool increase){
-  // calculating left or up border current chunk or biome zone
-  int border;
-  border = pos + (zone / 2);
-  if (border > 0){
-    border = (((int)((border - 1) / zone)) * zone) + (zone / 2);
-  }
-  else{
-    border = ((((int)(border / zone)) * zone) - (zone / 2));
-  }
-  // compare border and next coordinate
-  if (increase){
-    if ((pos + 1) == (border + 1)) return true;
-    else return false;
-  }
-  else{
-    if ((pos - 1) == (border - zone)) return true;
-    else return false;
-  }
-}
-
 /*#####################Class Scene implementation###################*/
 // set 2d mode
 void ClassScene::setOrthoProjection(GLsizei Width, GLsizei Height){
@@ -163,6 +140,32 @@ void ClassScene::LoadTextures(vector<string> texturelist){
 // deleting textures
 void ClassScene::ClearTextures(){
     glDeleteTextures(ClassScene::count_tex, &ClassScene::tiles_tex[0]);
+}
+
+// painting Scene
+void ClassScene::Draw(){
+  glClear(GL_COLOR_BUFFER_BIT);
+  glLoadIdentity();
+  gluLookAt(ClassScene::xpos_cam, ClassScene::ypos_cam, -6.0,
+            ClassScene::xpos_cam, ClassScene::ypos_cam, 1.0,
+            0.0, 1.0, 0.0);
+
+  // painting world
+  glScalef(scale, scale, 0.0);
+
+  ClassScene::DrawChunk(0, ClassScene::coords_chunks[0].x, ClassScene::coords_chunks[0].y);
+  ClassScene::DrawChunk(1, ClassScene::coords_chunks[1].x, ClassScene::coords_chunks[1].y);
+  ClassScene::DrawChunk(2, ClassScene::coords_chunks[2].x, ClassScene::coords_chunks[2].y);
+  ClassScene::DrawChunk(3, ClassScene::coords_chunks[3].x, ClassScene::coords_chunks[3].y);
+  ClassScene::DrawChunk(4, ClassScene::coords_chunks[4].x, ClassScene::coords_chunks[4].y);
+  ClassScene::DrawChunk(5, ClassScene::coords_chunks[5].x, ClassScene::coords_chunks[5].y);
+  ClassScene::DrawChunk(6, ClassScene::coords_chunks[6].x, ClassScene::coords_chunks[6].y);
+  ClassScene::DrawChunk(7, ClassScene::coords_chunks[7].x, ClassScene::coords_chunks[7].y);
+  ClassScene::DrawChunk(8, ClassScene::coords_chunks[8].x, ClassScene::coords_chunks[8].y);
+
+  ClassScene::DrawPlayer();
+
+  glutSwapBuffers();
 }
 
 // repainting OpenGL by reshape window
