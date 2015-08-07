@@ -20,20 +20,10 @@ struct tag_coords_chunks{
   int x;
   int y;
 };
-// structure for loading textures
-/*struct tag_textures{
-  GLuint surface[]
-  creatures
-  player
-  gui
-  fx
-};*/
 
 /*#######################   classes   #######################*/
 class ClassScene{
   private:
-    // loading three chunks
-    void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C);
     // moving and generate chunks
     // parameters: horizontal moving or not and increase or decrease coordinates
     void MoveChunks(bool horizontal, bool increase);
@@ -42,8 +32,13 @@ class ClassScene{
     // moving biome zones
     void MoveBiomes(bool horizontal, bool increase);
   public:
-    static const unsigned short int count_tex = 6; // count of textures
-    GLuint tiles_tex[count_tex]; // index texture of tiles
+    // count of textures
+    unsigned short int count_tex;
+    // index texture of tiles
+    GLuint *tiles_tex;
+    // array for loading textures
+    map <string, unsigned short int> TextureManager;
+
     // coordinates of camera
     float xpos_cam = 0.0;
     float ypos_cam = 0.0;
@@ -76,12 +71,16 @@ class ClassScene{
     // parameters for load and generate world with seed
     string str_seed, int_seed;
 
+    // initialization count of textures
+    void TexInit(unsigned short int count_tex);
     // loading texture by filename
     void LoadTextureImage(const char *texName, GLuint texture);
     // enter to ortho mode
     void setOrthoProjection(GLsizei Width, GLsizei Height);
     // exit of ortho mode
     void setPerspectiveProjection();
+    // loading three chunks
+    void LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C);
     //drawing chunk
     void DrawChunk(unsigned short int index, int x, int y);
     // output string
@@ -105,6 +104,8 @@ class ClassScene{
     void ProcessMoving(unsigned short int direction);
     // function for getting id biome from array using on input coordinates of chunk
     unsigned short int GetIDBiome(int x, int y, unsigned short int id_chunk);
+    // destructor
+    ~ClassScene();
 
     // friendly classes
     friend class ClassConsole;

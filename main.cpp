@@ -3,11 +3,16 @@ using namespace std;
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include <map>
 
 /*Open GL*/
 #include "GL/glut.h"
 #include "IL/il.h"
 #include "IL/ilu.h"
+
+/*Config ini function*/
+#include "config.h"
+#include "minini/minIni.h"
 
 /*My library*/
 #include "worldgen.h"
@@ -18,11 +23,11 @@ using namespace std;
 //#include <linux/limits.h>
 //#include <typeinfo>
 
-/*Config ini function*/
-#include "config.h"
-#include "minini/minIni.h"
+// id GLwindow
+unsigned short int wnd, console;
 
-unsigned short int wnd, console; // id GLwindow
+// list of textures
+vector<string> texturelist;
 
 // Class for basic functions
 ClassScene Scene;
@@ -30,7 +35,7 @@ ClassScene Scene;
 ClassConsole Console;
 
 //return path to executing programm
-/*char* getPath() {
+/*char* getPath(){
     char path[PATH_MAX];
     int cnt;
     if ((cnt = readlink("/proc/self/exe", path, PATH_MAX)) > 0) {
@@ -112,90 +117,98 @@ void Idle(){
   ConsoleDraw();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
 
-    minIni ini = OpenIniFile(mainini);
-    string s= getTextureIni(ini);
-    vector<string> texturelist= getTextureList(s);
+  minIni ini = OpenIniFile(mainini);
+  string s = getTextureIni(ini);
+  texturelist = getTextureList(s);
 
-    // getting seed
-    // loading world
-    /*std::cout << "Enter seed:";
+  // getting seed
+  // loading world
+  /*std::cout << "Enter seed:";
     std::cin >> str_seed;*/
-    Scene.str_seed = "3214n6kj245nlk6n13n231n5l243n51";
+  Scene.str_seed = "3214n6kj245nlk6n13n231n5l243n51";
 
-    // initializing and create window GLUT
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-    //glutInitWindowPosition(0, 0);
-    //glutInitWindowSize(640, 480);
-    wnd = glutCreateWindow("Evolution 0.1.0");
-    glutFullScreen();
+  // initializing and create window GLUT
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
+  //glutInitWindowPosition(0, 0);
+  //glutInitWindowSize(640, 480);
+  wnd = glutCreateWindow("Evolution 0.1.0");
+  glutFullScreen();
 
-    // initializing coordinates of biomes zones
-    Scene.coords_biomes[0].x = 0;
-    Scene.coords_biomes[0].y = 0;
+  // initializing textures
+  Scene.TexInit(texturelist.size());
 
-    // initializing coordinates of chunks
-    Scene.coords_chunks[0].x = 0;     Scene.coords_chunks[0].y = 0;
-    Scene.coords_chunks[1].x = 0;     Scene.coords_chunks[1].y = 1;
-    Scene.coords_chunks[2].x = -1;    Scene.coords_chunks[2].y = 1;
-    Scene.coords_chunks[3].x = -1;    Scene.coords_chunks[3].y = 0;
-    Scene.coords_chunks[4].x = -1;    Scene.coords_chunks[4].y = -1;
-    Scene.coords_chunks[5].x = 0;     Scene.coords_chunks[5].y = -1;
-    Scene.coords_chunks[6].x = 1;     Scene.coords_chunks[6].y = -1;
-    Scene.coords_chunks[7].x = 1;     Scene.coords_chunks[7].y = 0;
-    Scene.coords_chunks[8].x = 1;     Scene.coords_chunks[8].y = 1;
+  // initializing coordinates of biomes zones
+  Scene.coords_biomes[0].x = 0;
+  Scene.coords_biomes[0].y = 0;
 
-    // coordinates and borders
-    Scene.xpos = 0;
-    Scene.ypos = 0;
-    Scene.border_chunk_xpos = Scene.xpos + (size_zone / 2);
-    Scene.border_chunk_ypos = Scene.ypos + (size_zone / 2);
-    Scene.border_biom_xpos = Scene.coords_chunks[0].x + (size_zone_biomes / 2);
-    Scene.border_biom_ypos = Scene.coords_chunks[0].y + (size_zone_biomes / 2);
-    // loading world
-    Scene.int_seed = StrToInt(Scene.str_seed);
-    Scene.loaded_biomes[0] = LoadBiomes(Scene.int_seed, StrToInt("00"));
+  // initializing coordinates of chunks
+  Scene.coords_chunks[0].x = 0;     Scene.coords_chunks[0].y = 0;
+  Scene.coords_chunks[1].x = 0;     Scene.coords_chunks[1].y = 1;
+  Scene.coords_chunks[2].x = -1;    Scene.coords_chunks[2].y = 1;
+  Scene.coords_chunks[3].x = -1;    Scene.coords_chunks[3].y = 0;
+  Scene.coords_chunks[4].x = -1;    Scene.coords_chunks[4].y = -1;
+  Scene.coords_chunks[5].x = 0;     Scene.coords_chunks[5].y = -1;
+  Scene.coords_chunks[6].x = 1;     Scene.coords_chunks[6].y = -1;
+  Scene.coords_chunks[7].x = 1;     Scene.coords_chunks[7].y = 0;
+  Scene.coords_chunks[8].x = 1;     Scene.coords_chunks[8].y = 1;
 
-    Scene.loaded_tiles[0] = LoadChunk(Scene.int_seed, StrToInt("00"), Scene.GetIDBiome(0, 0, 0));
-    Scene.loaded_tiles[1] = LoadChunk(Scene.int_seed, StrToInt("01"), Scene.GetIDBiome(0, 1, 1));
-    Scene.loaded_tiles[2] = LoadChunk(Scene.int_seed, StrToInt("-11"), Scene.GetIDBiome(-1, 1, 2));
-    Scene.loaded_tiles[3] = LoadChunk(Scene.int_seed, StrToInt("-10"), Scene.GetIDBiome(-1, 0, 3));
-    Scene.loaded_tiles[4] = LoadChunk(Scene.int_seed, StrToInt("-1-1"), Scene.GetIDBiome(-1, -1, 4));
-    Scene.loaded_tiles[5] = LoadChunk(Scene.int_seed, StrToInt("0-1"), Scene.GetIDBiome(0, -1, 5));
-    Scene.loaded_tiles[6] = LoadChunk(Scene.int_seed, StrToInt("1-1"), Scene.GetIDBiome(1, -1, 6));
-    Scene.loaded_tiles[7] = LoadChunk(Scene.int_seed, StrToInt("10"), Scene.GetIDBiome(1, 0, 7));
-    Scene.loaded_tiles[8] = LoadChunk(Scene.int_seed, StrToInt("11"), Scene.GetIDBiome(1, 1, 8));
+  // coordinates and borders
+  Scene.xpos = 0;
+  Scene.ypos = 0;
+  Scene.border_chunk_xpos = Scene.xpos + (size_zone / 2);
+  Scene.border_chunk_ypos = Scene.ypos + (size_zone / 2);
+  Scene.border_biom_xpos = Scene.coords_chunks[0].x + (size_zone_biomes / 2);
+  Scene.border_biom_ypos = Scene.coords_chunks[0].y + (size_zone_biomes / 2);
+  // loading world
+  Scene.int_seed = StrToInt(Scene.str_seed);
+  Scene.loaded_biomes[0] = LoadBiomes(Scene.int_seed, StrToInt("00"));
 
-    // load Textures
-    Scene.LoadTextures(texturelist);
+  /*Scene.loaded_tiles[0] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("00"), Scene.GetIDBiome(0, 0, 0));
+  Scene.loaded_tiles[1] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("01"), Scene.GetIDBiome(0, 1, 1));
+  Scene.loaded_tiles[2] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("-11"), Scene.GetIDBiome(-1, 1, 2));
+  Scene.loaded_tiles[3] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("-10"), Scene.GetIDBiome(-1, 0, 3));
+  Scene.loaded_tiles[4] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("-1-1"), Scene.GetIDBiome(-1, -1, 4));
+  Scene.loaded_tiles[5] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("0-1"), Scene.GetIDBiome(0, -1, 5));
+  Scene.loaded_tiles[6] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("1-1"), Scene.GetIDBiome(1, -1, 6));
+  Scene.loaded_tiles[7] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("10"), Scene.GetIDBiome(1, 0, 7));
+  Scene.loaded_tiles[8] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("11"), Scene.GetIDBiome(1, 1, 8));*/
 
-    // defining events of window
-    glutDisplayFunc(SceneDraw);
-    glutReshapeFunc(SceneReshape);
-    glutIdleFunc(Idle);
-    glutKeyboardFunc(Keyboard);
-    glutSpecialFunc(ExtKeyboard);
+  // load Textures
+  Scene.LoadTextures(texturelist);
 
-    // fon color
-    glClearColor(0.5, 0.5, 0.5, 0.0);
-    // smoothing paint of color
-    glShadeModel(GL_SMOOTH);
-    // modificated perspective
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+  // loading starting chunks
+  Scene.LoadThreeChunks({0, 1, 2}, {0, 0}, {0, 1}, {-1, 1});
+  Scene.LoadThreeChunks({3, 4, 5}, {-1, 0}, {-1, -1}, {0, -1});
+  Scene.LoadThreeChunks({6, 7, 8}, {1, -1}, {1, 0}, {1, 1});
 
-    glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
-    console = glutCreateSubWindow(wnd, 10, 10, 1024, 200);
-    glClearColor(0.0, 1.0, 0.0, 0.0);
-    glutDisplayFunc(ConsoleDraw);
-    glutReshapeFunc(ConsoleReshape);
+  // defining events of window
+  glutDisplayFunc(SceneDraw);
+  glutReshapeFunc(SceneReshape);
+  glutIdleFunc(Idle);
+  glutKeyboardFunc(Keyboard);
+  glutSpecialFunc(ExtKeyboard);
 
-    // processing events of window
-    glutMainLoop();
-    // clear textures
-    Scene.ClearTextures();
-    glutDestroyWindow(wnd);
+  // fon color
+  glClearColor(0.5, 0.5, 0.5, 0.0);
+  // smoothing paint of color
+  glShadeModel(GL_SMOOTH);
+  // modificated perspective
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    return 0;
+  glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
+  console = glutCreateSubWindow(wnd, 10, 10, 1024, 200);
+  glClearColor(0.0, 1.0, 0.0, 0.0);
+  glutDisplayFunc(ConsoleDraw);
+  glutReshapeFunc(ConsoleReshape);
+
+  // processing events of window
+  glutMainLoop();
+  // clear textures
+  Scene.ClearTextures();
+  glutDestroyWindow(wnd);
+
+  return 0;
 }

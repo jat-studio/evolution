@@ -1,8 +1,10 @@
 using namespace std;
 /*Basic c library*/
 #include <iostream>
+#include <cstring>
 #include <array>
 #include <vector>
+#include <map>
 
 /*Open GL*/
 #include "GL/glut.h"
@@ -14,6 +16,14 @@ using namespace std;
 #include "engine.h"
 
 /*#####################Class Scene implementation###################*/
+// initialization count of textures
+void ClassScene::TexInit(unsigned short int count_tex){
+  // count of textures
+  ClassScene::count_tex = count_tex;
+  // index texture of tiles
+  tiles_tex = new GLuint[count_tex];
+}
+
 // set 2d mode
 void ClassScene::setOrthoProjection(GLsizei Width, GLsizei Height){
   glColor3f(0.0, 0.0, 0.0);
@@ -124,14 +134,19 @@ void ClassScene::LoadTextureImage(const char *texName, GLuint texture){
 // loading textures
 void ClassScene::LoadTextures(vector<string> texturelist){
     // create array of textures
-    glGenTextures(ClassScene::count_tex, &ClassScene::tiles_tex[0]);
+    glGenTextures(count_tex, &ClassScene::tiles_tex[0]);
 
     // initializing il and ilu library
     ilInit();
     iluInit();
     // loading textures
-    for(uint i=0;i<texturelist.size();i++){
-      ClassScene::LoadTextureImage(texturelist[i].c_str(), ClassScene::tiles_tex[i]);
+    unsigned short int val = 0;
+    for(unsigned short int i = 1; i < texturelist.size(); i += 2){
+      ClassScene::TextureManager.insert(pair<string, unsigned short int>(texturelist[i], val));
+      string str = texturelist[0];
+      str += texturelist[i + 1];
+      ClassScene::LoadTextureImage(str.c_str(), ClassScene::tiles_tex[val]);
+      val++;
     }
     // enabling textures
     glEnable(GL_TEXTURE_2D);
@@ -183,7 +198,7 @@ void ClassScene::Reshape(GLsizei Width, GLsizei Height){
 void ClassScene::DrawPlayer(){
     glPushMatrix();
     glTranslatef(ClassScene::xpos, ClassScene::ypos, 0.0);
-    glBindTexture(GL_TEXTURE_2D, ClassScene::tiles_tex[4]);
+    glBindTexture(GL_TEXTURE_2D, ClassScene::tiles_tex[ClassScene::TextureManager["player"]]);
 
     glBegin(GL_QUADS);
       glNormal3f(0.0, 0.0, -1.0);
@@ -228,9 +243,12 @@ unsigned short int ClassScene::GetIDBiome(int x, int y, unsigned short int id_ch
 
 // loading three chunks
 void ClassScene::LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
-    ClassScene::loaded_tiles[id_chunks.ida] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_A.x) + to_string(coords_chunks_A.y)), ClassScene::GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
-    ClassScene::loaded_tiles[id_chunks.idb] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_B.x) + to_string(coords_chunks_B.y)), ClassScene::GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
-    ClassScene::loaded_tiles[id_chunks.idc] = LoadChunk(int_seed, StrToInt(to_string(coords_chunks_C.x) + to_string(coords_chunks_C.y)), ClassScene::GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
+  ClassScene::loaded_tiles[id_chunks.ida] = LoadChunk(
+    ClassScene::TextureManager, int_seed, StrToInt(to_string(coords_chunks_A.x) + to_string(coords_chunks_A.y)), ClassScene::GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
+  ClassScene::loaded_tiles[id_chunks.idb] = LoadChunk(
+    ClassScene::TextureManager, int_seed, StrToInt(to_string(coords_chunks_B.x) + to_string(coords_chunks_B.y)), ClassScene::GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
+  ClassScene::loaded_tiles[id_chunks.idc] = LoadChunk(
+    ClassScene::TextureManager, int_seed, StrToInt(to_string(coords_chunks_C.x) + to_string(coords_chunks_C.y)), ClassScene::GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
 }
 
 // moving and generate chunks
@@ -295,15 +313,9 @@ void ClassScene::MoveChunks(bool horizontal, bool increase){
 
   // generate three new chunks
   ClassScene::LoadThreeChunks({id[6], id[7], id[8]},
-    {
-        ClassScene::coords_chunks[id[6]].x, ClassScene::coords_chunks[id[6]].y
-    },
-    {
-        ClassScene::coords_chunks[id[7]].x, ClassScene::coords_chunks[id[7]].y
-    },
-    {
-        ClassScene::coords_chunks[id[8]].x, ClassScene::coords_chunks[id[8]].y
-    });
+    {ClassScene::coords_chunks[id[6]].x, ClassScene::coords_chunks[id[6]].y},
+    {ClassScene::coords_chunks[id[7]].x, ClassScene::coords_chunks[id[7]].y},
+    {ClassScene::coords_chunks[id[8]].x, ClassScene::coords_chunks[id[8]].y});
 }
 
 // moving camera
@@ -520,6 +532,11 @@ void ClassScene::ProcessMoving(unsigned short int direction){
   }
   // changing camera and tile coordinates
   ClassScene::MoveCamera(Mov_horizontal, Mov_increase);
+}
+
+// destructor
+ClassScene::~ClassScene(){
+  ClassScene::TextureManager.clear();
 }
 
 /*#####################Class Console implementation###################*/

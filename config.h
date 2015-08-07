@@ -11,7 +11,10 @@ using namespace std;
 #ifndef CONFIG_H
 #define	CONFIG_H
 
+/*#######################   variables   #######################*/
 const string mainini = "evolution.ini";
+
+/*#######################   functions   #######################*/
 minIni OpenIniFile(const std::string mainini);
 std::string getTextureIni(minIni ini);
 std::vector<std::string> getTextureList(std::string ini);

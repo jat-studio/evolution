@@ -10,6 +10,7 @@ const unsigned short int size_zone_biomes = 64;
 const unsigned short int num_zones = 9;
 // scale of scene
 const float scale = 0.07;
+
 // constants for calculating hash
 const unsigned int PRIME32_1 = 2654435761;
 const unsigned int PRIME32_2 = 2246822519;
@@ -32,6 +33,6 @@ string StrToInt(string str);
 // function for loading id biomes of chunks into memory
 tag_biomes LoadBiomes(string seed, string coords);
 // function for loading id of tiles of current chunk into memory
-tag_tiles LoadChunk(string seed, string coords, unsigned short int id_biome);
+tag_tiles LoadChunk(map <string, unsigned short int> TextureManager, string seed, string coords, unsigned short int id_biome);
 
 #endif

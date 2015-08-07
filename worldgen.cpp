@@ -3,6 +3,7 @@ using namespace std;
 #include <cstdlib>
 #include <iostream>
 #include <array>
+#include <map>
 
 /*My library*/
 #include "worldgen.h"
@@ -87,7 +88,7 @@ tag_biomes LoadBiomes(string seed, string coords){
   unsigned short int percent;
 
   seed += coords;
-  seed += "43";
+  seed += "42";
   srand(GetHash(seed));
 
   for (unsigned short int i = 0; i < size_zone_biomes; i++){
@@ -104,19 +105,24 @@ tag_biomes LoadBiomes(string seed, string coords){
 }
 
 // function for generate field started on left down point (x , y) and size of (xsize, ysize) going to right and up
-tag_tiles GenerateField(unsigned short int x, unsigned short int y, unsigned short int xsize, unsigned short int ysize, unsigned short int id_biome){
+tag_tiles GenerateField(map <string, unsigned short int> TextureManager, unsigned short int x, unsigned short int y,
+                        unsigned short int xsize, unsigned short int ysize, unsigned short int id_biome){
   tag_tiles tiles_temp[1];
   unsigned short int percent;
   for (unsigned short int i = x; i < xsize; i++){
       for (unsigned short int j = y; j < ysize; j++){
         percent = 1 + (rand() % 100);
-        tiles_temp[0].tile_id [i] [j] = 0;
+        // default state
+        tiles_temp[0].tile_id [i] [j] = TextureManager["grass"];
+        if (id_biome == 1){
+          tiles_temp[0].tile_id [i] [j] = TextureManager["water"];
+        }
         // 10 % chance
         if (percent > 90){
-          tiles_temp[0].tile_id [i] [j] = 1;
-        }
-        if (id_biome == 1){
-          tiles_temp[0].tile_id [i] [j] += 2;
+          tiles_temp[0].tile_id [i] [j] = TextureManager["stone"];
+          if (id_biome == 1){
+            tiles_temp[0].tile_id [i] [j] = TextureManager["water_wave"];
+          }
         }
       }
     }
@@ -124,7 +130,7 @@ tag_tiles GenerateField(unsigned short int x, unsigned short int y, unsigned sho
 }
 
 // function for generate current chunk
-tag_tiles LoadChunk(string seed, string coords, unsigned short int id_biome){
+tag_tiles LoadChunk(map <string, unsigned short int> TextureManager, string seed, string coords, unsigned short int id_biome){
   tag_tiles tiles[1];
 
   // size zone for calculating collision of chunks with different biomes
@@ -134,7 +140,7 @@ tag_tiles LoadChunk(string seed, string coords, unsigned short int id_biome){
   // generate current chunk
   seed += coords;
   srand(GetHash(seed));
-  tiles[0] = GenerateField(0, 0, size_zone, size_zone, id_biome);
+  tiles[0] = GenerateField(TextureManager, 0, 0, size_zone, size_zone, id_biome);
   /*// generate center part of chunk
   tiles[0] = GenerateField();
   // generate up part of chunk
