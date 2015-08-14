@@ -26,6 +26,11 @@ using namespace std;
 // id GLwindow
 unsigned short int wnd, console;
 
+// application mode:
+// 0 - game
+// 1 - console
+unsigned short int AppMode = 0;
+
 // list of textures
 vector<string> texturelist;
 
@@ -34,7 +39,7 @@ ClassScene Scene;
 // Class for console
 ClassConsole Console;
 
-//return path to executing programm
+//return path to executing program
 /*char* getPath(){
     char path[PATH_MAX];
     int cnt;
@@ -67,30 +72,53 @@ void ConsoleDraw(){
   Console.Draw(Scene, console, wnd);
 }
 
-// processing keys
-void Keyboard(unsigned char key, int x, int y) {
-
-  Console.current_key = key;
-
+// processing keys in game mode
+void GameModeKeys(unsigned char key){
   switch (key){
-  // escape
-  case 27:
-    Scene.ClearTextures();
-    glutDestroyWindow(wnd);
-  break;
-  // "`" key
-  case 96:
-    if (Console.visible){
-      Console.visible = false;
-    }
-    else{
+    // escape - exit
+    case 27:
+      Scene.ClearTextures();
+      glutDestroyWindow(wnd);
+    break;
+    // "`" key - enter console mode
+    case 96:
       Console.visible = true;
-    }
-  break;
+      AppMode = 1;
+    break;
+  }
+}
+
+// processing keys in game mode
+void ConsoleModeKeys(unsigned char key){
+  // escape - exit to game mode
+  if (key == 27){
+    Console.visible = false;
+    Console.current_key = "";
+    AppMode = 0;
+  }
+  //Console.current_key = std::to_string((int)key);
+  // saving pressed keys to current_key variable if key is valid
+  if ((key >= 33) and (key <= 126)){
+    Console.current_key += key;
   }
 }
 
 // processing keys
+void Keyboard(unsigned char key, int x, int y){
+  // select application mode
+  switch (AppMode){
+    // game mode
+    case 0:
+      GameModeKeys(key);
+    break;
+    // console mode
+    case 1:
+      ConsoleModeKeys(key);
+    break;
+  }
+}
+
+// processing arrow keys
 void ExtKeyboard(int key, int x, int y){
   switch (key){
     // key left arrow
@@ -166,16 +194,6 @@ int main(int argc, char *argv[]){
   Scene.int_seed = StrToInt(Scene.str_seed);
   Scene.loaded_biomes[0] = LoadBiomes(Scene.int_seed, StrToInt("00"));
 
-  /*Scene.loaded_tiles[0] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("00"), Scene.GetIDBiome(0, 0, 0));
-  Scene.loaded_tiles[1] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("01"), Scene.GetIDBiome(0, 1, 1));
-  Scene.loaded_tiles[2] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("-11"), Scene.GetIDBiome(-1, 1, 2));
-  Scene.loaded_tiles[3] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("-10"), Scene.GetIDBiome(-1, 0, 3));
-  Scene.loaded_tiles[4] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("-1-1"), Scene.GetIDBiome(-1, -1, 4));
-  Scene.loaded_tiles[5] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("0-1"), Scene.GetIDBiome(0, -1, 5));
-  Scene.loaded_tiles[6] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("1-1"), Scene.GetIDBiome(1, -1, 6));
-  Scene.loaded_tiles[7] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("10"), Scene.GetIDBiome(1, 0, 7));
-  Scene.loaded_tiles[8] = LoadChunk(Scene.TextureManager, Scene.int_seed, StrToInt("11"), Scene.GetIDBiome(1, 1, 8));*/
-
   // load Textures
   Scene.LoadTextures(texturelist);
 
@@ -191,11 +209,11 @@ int main(int argc, char *argv[]){
   glutKeyboardFunc(Keyboard);
   glutSpecialFunc(ExtKeyboard);
 
-  // fon color
+  // background color
   glClearColor(0.5, 0.5, 0.5, 0.0);
   // smoothing paint of color
   glShadeModel(GL_SMOOTH);
-  // modificated perspective
+  // modified perspective
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
