@@ -21,8 +21,8 @@
 #define __ilut_h_
 #define __ILUT_H__
 
-#include <IL/il.h>
-#include <IL/ilu.h>
+#include "IL/il.h"
+#include "IL/ilu.h"
 
 
 //-----------------------------------------------------------------------------
@@ -137,8 +137,8 @@
 
 
 //this should remain private and hidden
-//#include "IL/config.h" 
- 
+//#include "IL/config.h"
+
 //////////////
 // OpenGL
 //////////////
@@ -148,7 +148,7 @@
 		//#define WIN32_LEAN_AND_MEAN
 		#include <windows.h>
 	#endif//_MSC_VER
- 
+
 	#ifdef __APPLE__
 		#include <OpenGL/gl.h>
 		#include <OpenGL/glu.h>
@@ -161,7 +161,7 @@
 
 #ifdef ILUT_USE_WIN32
 	//#define WIN32_LEAN_AND_MEAN
-	#ifdef _DEBUG 
+	#ifdef _DEBUG
 		#define _CRTDBG_MAP_ALLOC
 		#include <stdlib.h>
 		#ifndef _WIN32_WCE

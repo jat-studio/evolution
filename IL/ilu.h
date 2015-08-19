@@ -21,7 +21,7 @@
 #define __ilu_h_
 #define __ILU_H__
 
-#include <IL/il.h>
+#include "IL/il.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,7 +70,7 @@ extern "C" {
 #define ILU_UPPER_RIGHT        0x0704
 #define ILU_CENTER             0x0705
 #define ILU_CONVOLUTION_MATRIX 0x0710
-  
+
 #define ILU_VERSION_NUM IL_VERSION_NUM
 #define ILU_VENDOR      IL_VENDOR
 
