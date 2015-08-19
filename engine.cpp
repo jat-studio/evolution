@@ -222,17 +222,17 @@ unsigned short int ClassScene::GetIDBiome(int x, int y, unsigned short int id_ch
     unsigned short int id_array_biomes = 0;
 
     // horizontal border
-    if ((coeff_x < 0) or (coeff_x >= size_zone_biomes)){
+    if ((coeff_x < 0) || (coeff_x >= size_zone_biomes)){
       id_array_biomes = 1;
-      if ((coeff_y < 0) or (coeff_y >= size_zone_biomes)){
+      if ((coeff_y < 0) || (coeff_y >= size_zone_biomes)){
         id_array_biomes = 3;
       }
     }
 
     // vertical border
-    if ((coeff_y < 0) or (coeff_y >= size_zone_biomes)){
+    if ((coeff_y < 0) || (coeff_y >= size_zone_biomes)){
       id_array_biomes = 1;
-      if ((coeff_x < 0) or (coeff_x >= size_zone_biomes)){
+      if ((coeff_x < 0) || (coeff_x >= size_zone_biomes)){
         id_array_biomes = 3;
       }
     }
@@ -244,11 +244,11 @@ unsigned short int ClassScene::GetIDBiome(int x, int y, unsigned short int id_ch
 // loading three chunks
 void ClassScene::LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
   ClassScene::loaded_tiles[id_chunks.ida] = LoadChunk(
-    ClassScene::TextureManager, int_seed, StrToInt(to_string(coords_chunks_A.x) + to_string(coords_chunks_A.y)), ClassScene::GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
+    ClassScene::TextureManager, int_seed, StrToInt(Int_To_Str(coords_chunks_A.x) + Int_To_Str(coords_chunks_A.y)), ClassScene::GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
   ClassScene::loaded_tiles[id_chunks.idb] = LoadChunk(
-    ClassScene::TextureManager, int_seed, StrToInt(to_string(coords_chunks_B.x) + to_string(coords_chunks_B.y)), ClassScene::GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
+    ClassScene::TextureManager, int_seed, StrToInt(Int_To_Str(coords_chunks_B.x) + Int_To_Str(coords_chunks_B.y)), ClassScene::GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
   ClassScene::loaded_tiles[id_chunks.idc] = LoadChunk(
-    ClassScene::TextureManager, int_seed, StrToInt(to_string(coords_chunks_C.x) + to_string(coords_chunks_C.y)), ClassScene::GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
+    ClassScene::TextureManager, int_seed, StrToInt(Int_To_Str(coords_chunks_C.x) + Int_To_Str(coords_chunks_C.y)), ClassScene::GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
 }
 
 // moving and generate chunks
@@ -511,14 +511,14 @@ void ClassScene::ProcessMoving(unsigned short int direction){
     if (Mov_BorderChunkCoord == Mov_BorderBiom){
       // load next biome zone
       loaded_biomes[Mov_IDBiomesArray] =
-      LoadBiomes(int_seed, StrToInt(to_string(ClassScene::coords_biomes[0].x + Mov_CoeffX)
-                 + to_string(ClassScene::coords_biomes[0].y + Mov_CoeffY)));
+      LoadBiomes(int_seed, StrToInt(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_CoeffX)
+                 + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_CoeffY)));
       // load next diagonal biome zone ([3])
       if (Mov_DiagonalChunkCoord1 == Mov_DiagonalBorderBiom1){
-        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(to_string(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX1) + to_string(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY1)));
+        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX1) + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY1)));
       }
       if (Mov_DiagonalChunkCoord2 == Mov_DiagonalBorderBiom2){
-        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(to_string(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX2) + to_string(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY2)));
+        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX2) + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY2)));
       }
     }
 
@@ -559,7 +559,7 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   ClassConsole::fps++;
   ClassConsole::t = glutGet(GLUT_ELAPSED_TIME);
   if (ClassConsole::t - ClassConsole::dt > 1000){
-    ClassConsole::fps_str = "FPS:" + std::to_string((int)(ClassConsole::fps * 1000.0 / (ClassConsole::t - ClassConsole::dt)));
+    ClassConsole::fps_str = "FPS:" + Int_To_Str((int)(ClassConsole::fps * 1000.0 / (ClassConsole::t - ClassConsole::dt)));
     ClassConsole::dt = ClassConsole::t;
     ClassConsole::fps = 0;
   }
@@ -568,25 +568,25 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   // drawing coordinates
   std::string print_str;
   print_str = "X: ";
-  print_str += std::to_string(Object.xpos);
+  print_str += Int_To_Str(Object.xpos);
   print_str += "; Y: ";
-  print_str += std::to_string(Object.ypos);
+  print_str += Int_To_Str(Object.ypos);
   Object.DrawStaticString(-0.99, 0.75, 0.0, GLUT_BITMAP_8_BY_13, print_str);
 
   // drawing coordinates chunks
   std::string print_str1;
   print_str1 = "Xc: ";
-  print_str1 += std::to_string(Object.coords_chunks[0].x);
+  print_str1 += Int_To_Str(Object.coords_chunks[0].x);
   print_str1 += "; Yc: ";
-  print_str1 += std::to_string(Object.coords_chunks[0].y);
+  print_str1 += Int_To_Str(Object.coords_chunks[0].y);
   Object.DrawStaticString(-0.99, 0.60, 0.0, GLUT_BITMAP_8_BY_13, print_str1);
 
   // drawing coordinates biomes
   std::string print_str2;
   print_str2 = "Xb: ";
-  print_str2 += std::to_string(Object.coords_biomes[0].x);
+  print_str2 += Int_To_Str(Object.coords_biomes[0].x);
   print_str2 += "; Yb: ";
-  print_str2 += std::to_string(Object.coords_biomes[0].y);
+  print_str2 += Int_To_Str(Object.coords_biomes[0].y);
   Object.DrawStaticString(-0.99, 0.45, 0.0, GLUT_BITMAP_8_BY_13, print_str2);
 
   Object.DrawStaticString(-0.99, 0.30, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::current_key);
@@ -603,4 +603,47 @@ void ClassConsole::Reshape(GLsizei Width, GLsizei Height){
   glViewport(0, 0, Width, Height);
   gluOrtho2D(0, 0, Width, Height);
   glMatrixMode(GL_MODELVIEW);
+}
+
+/*#####################functions implementation###################*/
+// convert string to integer
+int Str_To_Int(string s){
+  int result = 0;
+  int len = s.length();
+  int i = 0;
+  int coeff = 1;
+  if ((int)s[0] == 45){
+    i = 1;
+    coeff = -1;
+  }
+  for (; i < len; i++){
+    int temp = ((int)s[i] - 48);
+    if ((temp >= 0) && (temp <= 9)){
+      for (int j = 1; j < (len - i); j++){
+        temp = temp * 10;
+      }
+    }
+    result += temp;
+  }
+  return (result * coeff);
+}
+
+// convert integer to string
+string Int_To_Str(int val){
+  string tmp = "";
+  string coeff = "";
+  if (val < 0){
+    val *= -1;
+    coeff = "-";
+  }
+  string result = coeff;
+  if (val == 0){result = "0";}
+  while(val > 0){
+    tmp += (char)((val % 10) + 48);
+    val /= 10;
+  }
+  for(int i = tmp.length(); i >= 0;i--){
+    result += tmp[i];
+  }
+  return result;
 }

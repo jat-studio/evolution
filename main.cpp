@@ -96,9 +96,9 @@ void ConsoleModeKeys(unsigned char key){
     Console.current_key = "";
     AppMode = 0;
   }
-  //Console.current_key = std::to_string((int)key);
+  //Console.current_key = Int_To_Str((int)key);
   // saving pressed keys to current_key variable if key is valid
-  if ((key >= 33) and (key <= 126)){
+  if ((key >= 33) && (key <= 126)){
     Console.current_key += key;
   }
 }

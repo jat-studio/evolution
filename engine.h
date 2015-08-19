@@ -128,4 +128,10 @@ class ClassConsole{
     void Reshape(GLsizei Width, GLsizei Height);
 };
 
+/*#######################   functions   ####################*/
+// convert string to integer
+int Str_To_Int(string s);
+// convert integer to string
+string Int_To_Str(int val);
+
 #endif
