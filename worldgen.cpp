@@ -8,8 +8,30 @@ using namespace std;
 /*My library*/
 #include "worldgen.h"
 
+// convert string to integer
+int Str_To_Int(string s){
+  int result = 0;
+  int len = s.length();
+  int i = 0;
+  int coeff = 1;
+  if ((int)s[0] == 45){
+    i = 1;
+    coeff = -1;
+  }
+  for (; i < len; i++){
+    int temp = ((int)s[i] - 48);
+    if ((temp >= 0) && (temp <= 9)){
+      for (int j = 1; j < (len - i); j++){
+        temp = temp * 10;
+      }
+    }
+    result += temp;
+  }
+  return (result * coeff);
+}
+
 // string >> char_codes >> string
-string StrToInt(string str){
+string StrToCharCodes(string str){
   unsigned short int length = str.length();
   char buffer[3];
   string str_out;
@@ -27,7 +49,7 @@ unsigned int RotateLeft(unsigned int value, int count){
 
 // function for calculating hash
 unsigned int CalcSubHash(unsigned int value, string buf, int index){
-  unsigned int read_value = stoi(buf.substr(index, 4));
+  unsigned int read_value = Str_To_Int(buf.substr(index, 4));
   value += read_value * PRIME32_2;
   value = RotateLeft(value, 13);
   value *= PRIME32_1;
@@ -63,12 +85,12 @@ unsigned int GetHash(string input){
   }
   h32 += (unsigned int)len;
   while (index <= len - 4){
-	h32 += stoi(input.substr(index, 4)) * PRIME32_3;
+	h32 += Str_To_Int(input.substr(index, 4)) * PRIME32_3;
 	h32 = RotateLeft (h32, 17) * PRIME32_4;
 	index += 4;
   }
   while (index<len){
-    h32 += stoi(input.substr(index, 1)) * PRIME32_5;
+    h32 += Str_To_Int(input.substr(index, 1)) * PRIME32_5;
 	h32 = RotateLeft (h32, 11) * PRIME32_1;
 	index++;
   }

@@ -191,8 +191,8 @@ int main(int argc, char *argv[]){
   Scene.border_biom_xpos = Scene.coords_chunks[0].x + (size_zone_biomes / 2);
   Scene.border_biom_ypos = Scene.coords_chunks[0].y + (size_zone_biomes / 2);
   // loading world
-  Scene.int_seed = StrToInt(Scene.str_seed);
-  Scene.loaded_biomes[0] = LoadBiomes(Scene.int_seed, StrToInt("00"));
+  Scene.int_seed = StrToCharCodes(Scene.str_seed);
+  Scene.loaded_biomes[0] = LoadBiomes(Scene.int_seed, StrToCharCodes("00"));
 
   // load Textures
   Scene.LoadTextures(texturelist);

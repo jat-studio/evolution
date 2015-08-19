@@ -29,7 +29,7 @@ struct tag_biomes{
 
 /*#######################   functions   #######################*/
 // string >> char_codes >> string
-string StrToInt(string str);
+string StrToCharCodes(string str);
 // function for loading id biomes of chunks into memory
 tag_biomes LoadBiomes(string seed, string coords);
 // function for loading id of tiles of current chunk into memory

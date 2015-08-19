@@ -244,11 +244,11 @@ unsigned short int ClassScene::GetIDBiome(int x, int y, unsigned short int id_ch
 // loading three chunks
 void ClassScene::LoadThreeChunks(tag_id_chunks id_chunks, tag_coords_chunks coords_chunks_A, tag_coords_chunks coords_chunks_B, tag_coords_chunks coords_chunks_C){
   ClassScene::loaded_tiles[id_chunks.ida] = LoadChunk(
-    ClassScene::TextureManager, int_seed, StrToInt(Int_To_Str(coords_chunks_A.x) + Int_To_Str(coords_chunks_A.y)), ClassScene::GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
+    ClassScene::TextureManager, int_seed, StrToCharCodes(Int_To_Str(coords_chunks_A.x) + Int_To_Str(coords_chunks_A.y)), ClassScene::GetIDBiome(coords_chunks_A.x, coords_chunks_A.y, id_chunks.ida));
   ClassScene::loaded_tiles[id_chunks.idb] = LoadChunk(
-    ClassScene::TextureManager, int_seed, StrToInt(Int_To_Str(coords_chunks_B.x) + Int_To_Str(coords_chunks_B.y)), ClassScene::GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
+    ClassScene::TextureManager, int_seed, StrToCharCodes(Int_To_Str(coords_chunks_B.x) + Int_To_Str(coords_chunks_B.y)), ClassScene::GetIDBiome(coords_chunks_B.x, coords_chunks_B.y, id_chunks.idb));
   ClassScene::loaded_tiles[id_chunks.idc] = LoadChunk(
-    ClassScene::TextureManager, int_seed, StrToInt(Int_To_Str(coords_chunks_C.x) + Int_To_Str(coords_chunks_C.y)), ClassScene::GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
+    ClassScene::TextureManager, int_seed, StrToCharCodes(Int_To_Str(coords_chunks_C.x) + Int_To_Str(coords_chunks_C.y)), ClassScene::GetIDBiome(coords_chunks_C.x, coords_chunks_C.y, id_chunks.idc));
 }
 
 // moving and generate chunks
@@ -511,14 +511,14 @@ void ClassScene::ProcessMoving(unsigned short int direction){
     if (Mov_BorderChunkCoord == Mov_BorderBiom){
       // load next biome zone
       loaded_biomes[Mov_IDBiomesArray] =
-      LoadBiomes(int_seed, StrToInt(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_CoeffX)
+      LoadBiomes(int_seed, StrToCharCodes(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_CoeffX)
                  + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_CoeffY)));
       // load next diagonal biome zone ([3])
       if (Mov_DiagonalChunkCoord1 == Mov_DiagonalBorderBiom1){
-        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX1) + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY1)));
+        loaded_biomes[3] = LoadBiomes(int_seed, StrToCharCodes(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX1) + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY1)));
       }
       if (Mov_DiagonalChunkCoord2 == Mov_DiagonalBorderBiom2){
-        loaded_biomes[3] = LoadBiomes(int_seed, StrToInt(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX2) + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY2)));
+        loaded_biomes[3] = LoadBiomes(int_seed, StrToCharCodes(Int_To_Str(ClassScene::coords_biomes[0].x + Mov_BiomCoeffX2) + Int_To_Str(ClassScene::coords_biomes[0].y + Mov_BiomCoeffY2)));
       }
     }
 
@@ -606,28 +606,6 @@ void ClassConsole::Reshape(GLsizei Width, GLsizei Height){
 }
 
 /*#####################functions implementation###################*/
-// convert string to integer
-int Str_To_Int(string s){
-  int result = 0;
-  int len = s.length();
-  int i = 0;
-  int coeff = 1;
-  if ((int)s[0] == 45){
-    i = 1;
-    coeff = -1;
-  }
-  for (; i < len; i++){
-    int temp = ((int)s[i] - 48);
-    if ((temp >= 0) && (temp <= 9)){
-      for (int j = 1; j < (len - i); j++){
-        temp = temp * 10;
-      }
-    }
-    result += temp;
-  }
-  return (result * coeff);
-}
-
 // convert integer to string
 string Int_To_Str(int val){
   string tmp = "";
