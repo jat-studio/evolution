@@ -7,40 +7,7 @@ using namespace std;
 
 /*My library*/
 #include "worldgen.h"
-
-// convert string to integer
-int Str_To_Int(string s){
-  int result = 0;
-  int len = s.length();
-  int i = 0;
-  int coeff = 1;
-  if ((int)s[0] == 45){
-    i = 1;
-    coeff = -1;
-  }
-  for (; i < len; i++){
-    int temp = ((int)s[i] - 48);
-    if ((temp >= 0) && (temp <= 9)){
-      for (int j = 1; j < (len - i); j++){
-        temp = temp * 10;
-      }
-    }
-    result += temp;
-  }
-  return (result * coeff);
-}
-
-// string >> char_codes >> string
-string StrToCharCodes(string str){
-  unsigned short int length = str.length();
-  char buffer[3];
-  string str_out;
-  for (unsigned short int i = 0; i < length; i++){
-    sprintf(buffer,"%d", (int)str[i]);
-    str_out += buffer;
-  }
-  return str_out;
-}
+#include "strings.h"
 
 // function for calculating hash
 unsigned int RotateLeft(unsigned int value, int count){

@@ -223,7 +223,7 @@
 1387209253 /home/jatstudio/Projects/evolution/IL/ilu.h
 	<IL/il.h>
 
-1439969310 source:/home/jatstudio/Projects/work_evolution/engine.cpp
+1440047894 source:/home/jatstudio/Projects/work_evolution/engine.cpp
 	<iostream>
 	<cstring>
 	<array>
@@ -234,6 +234,7 @@
 	"IL/ilu.h"
 	"worldgen.h"
 	"engine.h"
+	"strings.h"
 
 1436614866 /home/jatstudio/Projects/work_evolution/GL/glut.h
 	"freeglut_std.h"
@@ -254,9 +255,9 @@
 1439984593 /home/jatstudio/Projects/work_evolution/IL/ilu.h
 	"IL/il.h"
 
-1439969244 /home/jatstudio/Projects/work_evolution/engine.h
+1440047702 /home/jatstudio/Projects/work_evolution/engine.h
 
-1439969328 source:/home/jatstudio/Projects/work_evolution/main.cpp
+1440047834 source:/home/jatstudio/Projects/work_evolution/main.cpp
 	<cstring>
 	<iostream>
 	<vector>
@@ -268,8 +269,9 @@
 	"minini/minIni.h"
 	"worldgen.h"
 	"engine.h"
+	"strings.h"
 
-1439969091 /home/jatstudio/Projects/work_evolution/worldgen.h
+1440047764 /home/jatstudio/Projects/work_evolution/worldgen.h
 
 1424883222 /usr/include/unistd.h
 	<features.h>
@@ -300,12 +302,13 @@
 	<wx/wx.h>
 	"minIni.h"
 
-1439969244 source:/home/jatstudio/Projects/work_evolution/worldgen.cpp
+1440047764 source:/home/jatstudio/Projects/work_evolution/worldgen.cpp
 	<cstdlib>
 	<iostream>
 	<array>
 	<map>
 	"worldgen.h"
+	"strings.h"
 
 1436614976 source:/home/jatstudio/Projects/work_evolution/minini/minIni.c
 	"minIni.h"
@@ -329,8 +332,10 @@
 	<string>
 	"minIni.h"
 
-1438097694 source:/home/jatstudio/Projects/work_evolution/config.cpp
-	"minini/minIni.h"
+1440048014 source:/home/jatstudio/Projects/work_evolution/config.cpp
 	<iostream>
 	<vector>
+	"minini/minIni.h"
+
+1440047799 /home/jatstudio/Projects/work_evolution/strings.h
 

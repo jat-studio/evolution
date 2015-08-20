@@ -1,7 +1,10 @@
 using namespace std;
-#include "minini/minIni.h"
+/*Basic c library*/
 #include <iostream>
 #include <vector>
+
+/*My library*/
+#include "minini/minIni.h"
 
 //Открытие ini файлов
 minIni OpenIniFile(const string mainini) {
