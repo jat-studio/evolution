@@ -94,7 +94,7 @@ void ConsoleModeKeys(unsigned char key){
   // escape - exit to game mode
   if (key == 27){
     Console.visible = false;
-    Console.current_key = "";
+    Console.current_key = "Command~:";
     AppMode = 0;
   }
   //Console.current_key = Int_To_Str((int)key);
@@ -161,10 +161,10 @@ int main(int argc, char *argv[]){
   // initializing and create window GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-  //glutInitWindowPosition(0, 0);
-  //glutInitWindowSize(640, 480);
+  glutInitWindowPosition(0, 0);
+  glutInitWindowSize(1024, 768);
   wnd = glutCreateWindow("Evolution 0.1.0");
-  glutFullScreen();
+  //glutFullScreen();
 
   // initializing textures
   Scene.TexInit(texturelist.size());
@@ -218,7 +218,7 @@ int main(int argc, char *argv[]){
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
-  console = glutCreateSubWindow(wnd, 10, 10, 1024, 200);
+  console = glutCreateSubWindow(wnd, 10, 10, glutGet(GLUT_WINDOW_WIDTH) - 20, 100);
   glClearColor(0.0, 1.0, 0.0, 0.0);
   glutDisplayFunc(ConsoleDraw);
   glutReshapeFunc(ConsoleReshape);

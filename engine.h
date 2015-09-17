@@ -113,12 +113,15 @@ class ClassScene{
 
 class ClassConsole{
   public:
+    float str_height = 0.13;
+    float str_start_pos = 0.90;
+    float str_current_pos = 0.90;
     // fps calculating parameters
     int fps;
     long t, dt;
     string fps_str;
     // pressed key
-    string current_key;
+    string current_key = "Command~:";
     // console visible state
     bool visible = false;
 

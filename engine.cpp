@@ -564,7 +564,9 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
     ClassConsole::dt = ClassConsole::t;
     ClassConsole::fps = 0;
   }
-  Object.DrawStaticString(-0.99, 0.90, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::fps_str);
+  ClassConsole::str_current_pos = ClassConsole::str_start_pos;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::fps_str);
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
 
   // drawing coordinates
   std::string print_str;
@@ -572,7 +574,8 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   print_str += Int_To_Str(Object.xpos);
   print_str += "; Y: ";
   print_str += Int_To_Str(Object.ypos);
-  Object.DrawStaticString(-0.99, 0.75, 0.0, GLUT_BITMAP_8_BY_13, print_str);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, print_str);
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
 
   // drawing coordinates chunks
   std::string print_str1;
@@ -580,7 +583,8 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   print_str1 += Int_To_Str(Object.coords_chunks[0].x);
   print_str1 += "; Yc: ";
   print_str1 += Int_To_Str(Object.coords_chunks[0].y);
-  Object.DrawStaticString(-0.99, 0.60, 0.0, GLUT_BITMAP_8_BY_13, print_str1);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, print_str1);
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
 
   // drawing coordinates biomes
   std::string print_str2;
@@ -588,9 +592,31 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   print_str2 += Int_To_Str(Object.coords_biomes[0].x);
   print_str2 += "; Yb: ";
   print_str2 += Int_To_Str(Object.coords_biomes[0].y);
-  Object.DrawStaticString(-0.99, 0.45, 0.0, GLUT_BITMAP_8_BY_13, print_str2);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, print_str2);
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
 
-  Object.DrawStaticString(-0.99, 0.30, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::current_key);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
+  ClassConsole::str_current_pos -= ClassConsole::str_height;
+
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::current_key);
 
   glFlush();
 

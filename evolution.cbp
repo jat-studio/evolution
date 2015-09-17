@@ -98,6 +98,8 @@
 			<Option target="Release" />
 		</Unit>
 		<Unit filename="minini/wxMinIni.h" />
+		<Unit filename="strings.cpp" />
+		<Unit filename="strings.h" />
 		<Unit filename="worldgen.cpp" />
 		<Unit filename="worldgen.h" />
 		<Extensions>
