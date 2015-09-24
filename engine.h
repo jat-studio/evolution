@@ -119,16 +119,22 @@ class ClassConsole{
     // fps calculating parameters
     int fps;
     long t, dt;
-    string fps_str;
-    // pressed key
-    string current_key = "Command~:";
+    // console strings
+    array<string, 14> console_str;
+    // entering string
+    string command_str = "Command~:";
+    string current_key = "";
     // console visible state
     bool visible = false;
 
+    // constructor
+    ClassConsole();
     // painting Console
     void Draw(ClassScene &object, unsigned short int console, unsigned short int wnd);
     // set 2d mode
     void Reshape(GLsizei Width, GLsizei Height);
+    // pressing Enter
+    void Enter();
 };
 
 #endif

@@ -102,6 +102,10 @@ void ConsoleModeKeys(unsigned char key){
   if ((key >= 33) && (key <= 126)){
     Console.current_key += key;
   }
+  // pressing enter
+  if (key == 13){
+    Console.Enter();
+  }
 }
 
 // processing keys
@@ -218,7 +222,7 @@ int main(int argc, char *argv[]){
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
-  console = glutCreateSubWindow(wnd, 10, 10, glutGet(GLUT_WINDOW_WIDTH) - 20, 100);
+  console = glutCreateSubWindow(wnd, 10, 10, glutGet(GLUT_WINDOW_WIDTH) - 20, 200);
   glClearColor(0.0, 1.0, 0.0, 0.0);
   glutDisplayFunc(ConsoleDraw);
   glutReshapeFunc(ConsoleReshape);

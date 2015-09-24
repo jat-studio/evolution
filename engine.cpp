@@ -541,6 +541,13 @@ ClassScene::~ClassScene(){
 }
 
 /*#####################Class Console implementation###################*/
+// constructor
+ClassConsole::ClassConsole(){
+  for(unsigned short int i = 0; i <= 13; i++){
+    ClassConsole::console_str[i] = "";
+  }
+}
+
 // painting Console
 void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned short int wnd){
 
@@ -560,63 +567,44 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   ClassConsole::fps++;
   ClassConsole::t = glutGet(GLUT_ELAPSED_TIME);
   if (ClassConsole::t - ClassConsole::dt > 1000){
-    ClassConsole::fps_str = "FPS:" + Int_To_Str((int)(ClassConsole::fps * 1000.0 / (ClassConsole::t - ClassConsole::dt)));
+    ClassConsole::console_str[0] = "FPS:" + Int_To_Str((int)(ClassConsole::fps * 1000.0 / (ClassConsole::t - ClassConsole::dt)));
     ClassConsole::dt = ClassConsole::t;
     ClassConsole::fps = 0;
   }
   ClassConsole::str_current_pos = ClassConsole::str_start_pos;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::fps_str);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::console_str[0]);
   ClassConsole::str_current_pos -= ClassConsole::str_height;
 
   // drawing coordinates
-  std::string print_str;
-  print_str = "X: ";
-  print_str += Int_To_Str(Object.xpos);
-  print_str += "; Y: ";
-  print_str += Int_To_Str(Object.ypos);
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, print_str);
+  ClassConsole::console_str[1] = "X: ";
+  ClassConsole::console_str[1] += Int_To_Str(Object.xpos);
+  ClassConsole::console_str[1] += "; Y: ";
+  ClassConsole::console_str[1] += Int_To_Str(Object.ypos);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::console_str[1]);
   ClassConsole::str_current_pos -= ClassConsole::str_height;
 
   // drawing coordinates chunks
-  std::string print_str1;
-  print_str1 = "Xc: ";
-  print_str1 += Int_To_Str(Object.coords_chunks[0].x);
-  print_str1 += "; Yc: ";
-  print_str1 += Int_To_Str(Object.coords_chunks[0].y);
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, print_str1);
+  ClassConsole::console_str[2] = "Xc: ";
+  ClassConsole::console_str[2] += Int_To_Str(Object.coords_chunks[0].x);
+  ClassConsole::console_str[2] += "; Yc: ";
+  ClassConsole::console_str[2] += Int_To_Str(Object.coords_chunks[0].y);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::console_str[2]);
   ClassConsole::str_current_pos -= ClassConsole::str_height;
 
   // drawing coordinates biomes
-  std::string print_str2;
-  print_str2 = "Xb: ";
-  print_str2 += Int_To_Str(Object.coords_biomes[0].x);
-  print_str2 += "; Yb: ";
-  print_str2 += Int_To_Str(Object.coords_biomes[0].y);
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, print_str2);
+  ClassConsole::console_str[3] = "Xb: ";
+  ClassConsole::console_str[3] += Int_To_Str(Object.coords_biomes[0].x);
+  ClassConsole::console_str[3] += "; Yb: ";
+  ClassConsole::console_str[3] += Int_To_Str(Object.coords_biomes[0].y);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::console_str[3]);
   ClassConsole::str_current_pos -= ClassConsole::str_height;
 
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, "test");
-  ClassConsole::str_current_pos -= ClassConsole::str_height;
+  for (unsigned short int i = 4; i <= 13; i++){
+    Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::console_str[i]);
+    ClassConsole::str_current_pos -= ClassConsole::str_height;
+  }
 
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, ClassConsole::current_key);
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, (ClassConsole::command_str + ClassConsole::current_key));
 
   glFlush();
 
@@ -630,4 +618,18 @@ void ClassConsole::Reshape(GLsizei Width, GLsizei Height){
   glViewport(0, 0, Width, Height);
   gluOrtho2D(0, 0, Width, Height);
   glMatrixMode(GL_MODELVIEW);
+}
+
+// pressing Enter
+void ClassConsole::Enter(){
+  // moving console strings up
+  for (unsigned short int i = 4; i <= 12; i++){
+    ClassConsole::console_str[i] = ClassConsole::console_str[i + 1];
+  }
+  // running entered to console command
+  //ClassConsole::current_key
+  // saving entered value to down string
+  ClassConsole::console_str[13] = ClassConsole::current_key;
+  // clear entering string
+  ClassConsole::current_key = "";
 }
