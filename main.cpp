@@ -56,16 +56,22 @@ ClassConsole Console;
 // repainting OpenGL by reshape window
 void SceneReshape(GLsizei Width, GLsizei Height){
   Scene.Reshape(Width, Height);
-}
-
-// painting Scene
-void SceneDraw(){
-  Scene.Draw();
+  // reshaping console window
+  glutSetWindow(console);
+  glutHideWindow();
+  glutReshapeWindow(Width - 20, 200);
+  glutShowWindow();
+  glutSetWindow(wnd);
 }
 
 // repainting OpenGL by reshape window
 void ConsoleReshape(GLsizei Width, GLsizei Height){
   Console.Reshape(Width, Height);
+}
+
+// painting Scene
+void SceneDraw(){
+  Scene.Draw();
 }
 
 // painting Console
@@ -91,20 +97,29 @@ void GameModeKeys(unsigned char key){
 
 // processing keys in game mode
 void ConsoleModeKeys(unsigned char key){
+  //std::cout << (int)key;
   // escape - exit to game mode
   if (key == 27){
     Console.visible = false;
-    Console.current_key = "Command~:";
     AppMode = 0;
   }
-  //Console.current_key = Int_To_Str((int)key);
-  // saving pressed keys to current_key variable if key is valid
-  if ((key >= 33) && (key <= 126)){
+  // saving pressed keys to current_key variable if key and length of string is valid
+  if ((key >= 32) && (key <= 126) && (Console.current_key.length() < 50)){
     Console.current_key += key;
   }
   // pressing enter
   if (key == 13){
     Console.Enter();
+  }
+  // pressing backspace
+  if (key == 8){
+    string tmp = Console.current_key;
+    Console.current_key = "";
+    if (tmp.length() > 0){
+      for (unsigned short int i = 0; i < (tmp.length() - 1); i++){
+        Console.current_key += tmp[i];
+      }
+    }
   }
 }
 

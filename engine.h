@@ -113,6 +113,7 @@ class ClassScene{
 
 class ClassConsole{
   public:
+    // string placing parameters
     float str_height = 0.13;
     float str_start_pos = 0.90;
     float str_current_pos = 0.90;

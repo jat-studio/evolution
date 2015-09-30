@@ -550,7 +550,6 @@ ClassConsole::ClassConsole(){
 
 // painting Console
 void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned short int wnd){
-
   glutSetWindow(console);
   if (!ClassConsole::visible){
     glutHideWindow();
@@ -560,6 +559,8 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
   }
 
   glClear(GL_COLOR_BUFFER_BIT);
+
+  glLoadIdentity();
 
   glColor3f(0.0, 0.0, 0.0);
 
@@ -604,7 +605,7 @@ void ClassConsole::Draw(ClassScene &Object, unsigned short int console, unsigned
     ClassConsole::str_current_pos -= ClassConsole::str_height;
   }
 
-  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, (ClassConsole::command_str + ClassConsole::current_key));
+  Object.DrawStaticString(-0.99, ClassConsole::str_current_pos, 0.0, GLUT_BITMAP_8_BY_13, (ClassConsole::command_str + ClassConsole::current_key + "_"));
 
   glFlush();
 
@@ -627,7 +628,26 @@ void ClassConsole::Enter(){
     ClassConsole::console_str[i] = ClassConsole::console_str[i + 1];
   }
   // running entered to console command
-  //ClassConsole::current_key
+  unsigned short int i = 0;
+  unsigned short int len = ClassConsole::current_key.length();
+  string command = "";
+  while ((ClassConsole::current_key[i] != ' ') && (i <= len)){
+    command += ClassConsole::current_key[i];
+    i++;
+  }
+  i++;
+  string param1 = "";
+  while ((ClassConsole::current_key[i] != ' ') && (i <= len)){
+    param1 += ClassConsole::current_key[i];
+    i++;
+  }
+  i++;
+  string param2 = "";
+  while ((ClassConsole::current_key[i] != ' ') && (i <= len)){
+    param2 += ClassConsole::current_key[i];
+    i++;
+  }
+  std::cout << command + ";" + param1 + ";" + param2 + ";" + "\n";
   // saving entered value to down string
   ClassConsole::console_str[13] = ClassConsole::current_key;
   // clear entering string
