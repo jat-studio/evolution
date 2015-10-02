@@ -113,6 +113,8 @@ class ClassScene{
 
 class ClassConsole{
   public:
+    // array of functions
+    map <string, void (ClassConsole::*)(int, int)> commands;
     // string placing parameters
     float str_height = 0.13;
     float str_start_pos = 0.90;
@@ -136,6 +138,10 @@ class ClassConsole{
     void Reshape(GLsizei Width, GLsizei Height);
     // pressing Enter
     void Enter();
+    // goto x y coordinates
+    void Goto_x_y(int x, int y);
+    // destructor
+    ~ClassConsole();
 };
 
 #endif

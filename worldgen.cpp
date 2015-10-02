@@ -2,7 +2,6 @@ using namespace std;
 /*Basic c library*/
 #include <cstdlib>
 #include <iostream>
-#include <array>
 #include <map>
 
 /*My library*/

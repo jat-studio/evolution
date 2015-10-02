@@ -546,6 +546,7 @@ ClassConsole::ClassConsole(){
   for(unsigned short int i = 0; i <= 13; i++){
     ClassConsole::console_str[i] = "";
   }
+  ClassConsole::commands["goto"] = &ClassConsole::Goto_x_y;
 }
 
 // painting Console
@@ -647,9 +648,21 @@ void ClassConsole::Enter(){
     param2 += ClassConsole::current_key[i];
     i++;
   }
-  std::cout << command + ";" + param1 + ";" + param2 + ";" + "\n";
+  // call function
+  // проверить длину строк param1
+  (this->*ClassConsole::commands[command])(Str_To_Int(param1), Str_To_Int(param2));
   // saving entered value to down string
   ClassConsole::console_str[13] = ClassConsole::current_key;
   // clear entering string
   ClassConsole::current_key = "";
+}
+
+// goto x and y coordinates
+void ClassConsole::Goto_x_y(int x, int y){
+  std::cout << x + ';' + y + ';';
+}
+
+// destructor
+ClassConsole::~ClassConsole(){
+  ClassConsole::commands.clear();
 }
