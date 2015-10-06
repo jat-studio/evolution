@@ -15,7 +15,8 @@ unsigned int RotateLeft(unsigned int value, int count){
 
 // function for calculating hash
 unsigned int CalcSubHash(unsigned int value, string buf, int index){
-  unsigned int read_value = Str_To_Int(buf.substr(index, 4));
+  bool valid = false;
+  unsigned int read_value = Str_To_Int(buf.substr(index, 4), &valid);
   value += read_value * PRIME32_2;
   value = RotateLeft(value, 13);
   value *= PRIME32_1;
@@ -50,13 +51,14 @@ unsigned int GetHash(string input){
     h32 = seed + PRIME32_5;
   }
   h32 += (unsigned int)len;
+  bool valid = false;
   while (index <= len - 4){
-	h32 += Str_To_Int(input.substr(index, 4)) * PRIME32_3;
+	h32 += Str_To_Int(input.substr(index, 4), &valid) * PRIME32_3;
 	h32 = RotateLeft (h32, 17) * PRIME32_4;
 	index += 4;
   }
   while (index<len){
-    h32 += Str_To_Int(input.substr(index, 1)) * PRIME32_5;
+    h32 += Str_To_Int(input.substr(index, 1), &valid) * PRIME32_5;
 	h32 = RotateLeft (h32, 11) * PRIME32_1;
 	index++;
   }

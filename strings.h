@@ -3,7 +3,7 @@ using namespace std;
 #define STRINGS_H_INCLUDED
 
 // convert string to integer
-int Str_To_Int(string s);
+int Str_To_Int(string s, bool *valid);
 // convert integer to string
 string Int_To_Str(int val);
 // string >> char_codes >> string

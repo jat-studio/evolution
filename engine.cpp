@@ -632,25 +632,30 @@ void ClassConsole::Enter(){
   unsigned short int i = 0;
   unsigned short int len = ClassConsole::current_key.length();
   string command = "";
-  while ((ClassConsole::current_key[i] != ' ') && (i <= len)){
+  while ((ClassConsole::current_key[i] != ' ') && (i < len)){
     command += ClassConsole::current_key[i];
     i++;
   }
   i++;
   string param1 = "";
-  while ((ClassConsole::current_key[i] != ' ') && (i <= len)){
+  while ((ClassConsole::current_key[i] != ' ') && (i < len)){
     param1 += ClassConsole::current_key[i];
     i++;
   }
   i++;
   string param2 = "";
-  while ((ClassConsole::current_key[i] != ' ') && (i <= len)){
+  while ((ClassConsole::current_key[i] != ' ') && (i < len)){
     param2 += ClassConsole::current_key[i];
     i++;
   }
   // call function
-  // проверить длину строк param1
-  (this->*ClassConsole::commands[command])(Str_To_Int(param1), Str_To_Int(param2));
+  bool valid1 = false;
+  bool valid2 = false;
+  int intparam1 = Str_To_Int(param1, &valid1);
+  int intparam2 = Str_To_Int(param2, &valid2);
+  if (valid1 && valid2){
+    (this->*ClassConsole::commands[command])(intparam1, intparam2);
+  }
   // saving entered value to down string
   ClassConsole::console_str[13] = ClassConsole::current_key;
   // clear entering string
@@ -659,7 +664,10 @@ void ClassConsole::Enter(){
 
 // goto x and y coordinates
 void ClassConsole::Goto_x_y(int x, int y){
-  std::cout << x + ';' + y + ';';
+  std::cout << x;
+  std::cout << ";";
+  std::cout << y;
+  std::cout << ";\n";
 }
 
 // destructor

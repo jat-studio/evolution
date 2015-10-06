@@ -3,7 +3,8 @@ using namespace std;
 #include <iostream>
 
 // convert string to integer
-int Str_To_Int(string s){
+int Str_To_Int(string s, bool *valid){
+  *valid = true;
   int result = 0;
   int len = s.length();
   int i = 0;
@@ -18,8 +19,11 @@ int Str_To_Int(string s){
       for (int j = 1; j < (len - i); j++){
         temp = temp * 10;
       }
+      result += temp;
     }
-    result += temp;
+    else{
+      *valid = false;
+    }
   }
   return (result * coeff);
 }
