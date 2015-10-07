@@ -9,21 +9,25 @@ int Str_To_Int(string s, bool *valid){
   int len = s.length();
   int i = 0;
   int coeff = 1;
+  int temp = 0;
   if ((int)s[0] == 45){
     i = 1;
     coeff = -1;
   }
   for (; i < len; i++){
-    int temp = ((int)s[i] - 48);
+    temp = ((int)s[i] - 48);
     if ((temp >= 0) && (temp <= 9)){
       for (int j = 1; j < (len - i); j++){
         temp = temp * 10;
       }
-      result += temp;
     }
     else{
       *valid = false;
     }
+    result += temp;
+  }
+  if (len == 0){
+    *valid = false;
   }
   return (result * coeff);
 }

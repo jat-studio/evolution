@@ -546,7 +546,7 @@ ClassConsole::ClassConsole(){
   for(unsigned short int i = 0; i <= 13; i++){
     ClassConsole::console_str[i] = "";
   }
-  ClassConsole::commands["goto"] = &ClassConsole::Goto_x_y;
+  ClassConsole::dualcommands["goto"] = &ClassConsole::Goto_x_y;
 }
 
 // painting Console
@@ -648,16 +648,28 @@ void ClassConsole::Enter(){
     param2 += ClassConsole::current_key[i];
     i++;
   }
-  // call function
+  // preparing to call function
   bool valid1 = false;
   bool valid2 = false;
   int intparam1 = Str_To_Int(param1, &valid1);
   int intparam2 = Str_To_Int(param2, &valid2);
+  ClassConsole::console_str[13] = "error command | ";
+  // call function with two parameters
   if (valid1 && valid2){
-    (this->*ClassConsole::commands[command])(intparam1, intparam2);
+    if (ClassConsole::dualcommands.count(command) > 0){
+      (this->*ClassConsole::dualcommands[command])(intparam1, intparam2);
+      ClassConsole::console_str[13] = "done command | ";
+    }
+  }
+  // call function with one parameter
+  if (valid1 && !valid2){
+    if (ClassConsole::singlecommands.count(command) > 0){
+      (this->*ClassConsole::singlecommands[command])(intparam1);
+      ClassConsole::console_str[13] = "done command | ";
+    }
   }
   // saving entered value to down string
-  ClassConsole::console_str[13] = ClassConsole::current_key;
+  ClassConsole::console_str[13] += ClassConsole::current_key;
   // clear entering string
   ClassConsole::current_key = "";
 }
@@ -672,5 +684,6 @@ void ClassConsole::Goto_x_y(int x, int y){
 
 // destructor
 ClassConsole::~ClassConsole(){
-  ClassConsole::commands.clear();
+  ClassConsole::dualcommands.clear();
+  ClassConsole::singlecommands.clear();
 }

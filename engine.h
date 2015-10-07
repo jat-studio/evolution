@@ -114,7 +114,8 @@ class ClassScene{
 class ClassConsole{
   public:
     // array of functions
-    map <string, void (ClassConsole::*)(int, int)> commands;
+    map <string, void (ClassConsole::*)(int, int)> dualcommands;
+    map <string, void (ClassConsole::*)(int)> singlecommands;
     // string placing parameters
     float str_height = 0.13;
     float str_start_pos = 0.90;
