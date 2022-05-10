@@ -367,9 +367,9 @@
 	<wx/wx.h>
 	"minIni.h"
 
-1652168604 source:/home/dmitry/code/evolution/engine.cpp
+1652189377 source:/home/dmitry/code/evolution/engine.cpp
 	<iostream>
-	<cstring>
+	<string>
 	<array>
 	<vector>
 	<map>
@@ -378,7 +378,7 @@
 	"IL/ilu.h"
 	"worldgen.h"
 	"engine.h"
-	"strings.h"
+	"evo_strings.h"
 
 1652168604 /home/dmitry/code/evolution/GL/glut.h
 	"freeglut_std.h"
