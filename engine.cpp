@@ -1,7 +1,7 @@
 using namespace std;
 /*Basic c library*/
 #include <iostream>
-#include <cstring>
+#include <string>
 #include <array>
 #include <vector>
 #include <map>
@@ -14,7 +14,7 @@ using namespace std;
 /*My library*/
 #include "worldgen.h"
 #include "engine.h"
-#include "strings.h"
+#include "evo_strings.h"
 
 /*#####################Class Scene implementation###################*/
 // initialization count of textures
@@ -99,7 +99,7 @@ void ClassScene::LoadTextureImage(const char *texName, GLuint texture){
   unsigned char *data_img;
 
   // loading texture
-  ilLoad(IL_TYPE_UNKNOWN, texName);
+  ilLoad(IL_TGA, texName);
   // processing of errors
   int err = ilGetError();
   if (err != IL_NO_ERROR){

@@ -1,6 +1,6 @@
 using namespace std;
 /*Basic c library*/
-#include <cstring>
+#include <string>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -17,7 +17,7 @@ using namespace std;
 /*My library*/
 #include "worldgen.h"
 #include "engine.h"
-#include "strings.h"
+#include "evo_strings.h"
 
 /*Unix environment*/
 //#include <unistd.h>

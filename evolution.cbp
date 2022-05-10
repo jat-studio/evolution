@@ -12,9 +12,10 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-std=c++11" />
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add option="-std=c++11" />
+					<Add directory="/home/dmitry/code/evolution/" />
 				</Compiler>
 				<Linker>
 					<Add library="glut" />
@@ -22,6 +23,7 @@
 					<Add library="GL" />
 					<Add library="IL" />
 					<Add library="ILU" />
+					<Add directory="/home/dmitry/code/evolution/" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -38,6 +40,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-std=c11" />
+		</Compiler>
 		<Linker>
 			<Add library="glut" />
 			<Add library="GL" />
@@ -78,6 +83,8 @@
 		<Unit filename="config.h" />
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.h" />
+		<Unit filename="evo_strings.cpp" />
+		<Unit filename="evo_strings.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="minini/minGlue-FatFs.h" />
 		<Unit filename="minini/minGlue-ccs.h" />
@@ -98,15 +105,10 @@
 			<Option target="Release" />
 		</Unit>
 		<Unit filename="minini/wxMinIni.h" />
-		<Unit filename="strings.cpp" />
-		<Unit filename="strings.h" />
 		<Unit filename="worldgen.cpp" />
 		<Unit filename="worldgen.h" />
 		<Extensions>
-			<envvars />
-			<code_completion />
 			<lib_finder disable_auto="1" />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

@@ -349,3 +349,127 @@
 
 1443780724 /home/jatstudio/Projects/work_evolution/console_commands.h
 
+1652168604 source:/home/dmitry/code/evolution/config.cpp
+	<iostream>
+	<vector>
+	"minini/minIni.h"
+
+1652168604 /home/dmitry/code/evolution/minini/minIni.h
+	"minGlue.h"
+	<tchar.h>
+	"wxMinIni.h"
+	<string>
+
+1652168604 /home/dmitry/code/evolution/minini/minGlue.h
+	<stdio.h>
+
+1652168604 /home/dmitry/code/evolution/minini/wxMinIni.h
+	<wx/wx.h>
+	"minIni.h"
+
+1652168604 source:/home/dmitry/code/evolution/engine.cpp
+	<iostream>
+	<cstring>
+	<array>
+	<vector>
+	<map>
+	"GL/glut.h"
+	"IL/il.h"
+	"IL/ilu.h"
+	"worldgen.h"
+	"engine.h"
+	"strings.h"
+
+1652168604 /home/dmitry/code/evolution/GL/glut.h
+	"freeglut_std.h"
+
+1652168604 /home/dmitry/code/evolution/GL/freeglut_std.h
+	<windows.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1652168604 /home/dmitry/code/evolution//GL/gl.h
+	"gl_mangle.h"
+	<windows.h>
+	<GL/glext.h>
+
+1652168604 /home/dmitry/code/evolution//GL/gl_mangle.h
+
+1652168604 /home/dmitry/code/evolution//GL/glext.h
+	<windows.h>
+	<stddef.h>
+	<inttypes.h>
+	<inttypes.h>
+	<inttypes.h>
+	<stdint.h>
+	<stdint.h>
+	<inttypes.h>
+
+1652168604 /home/dmitry/code/evolution//GL/glu.h
+	"glu_mangle.h"
+	<GL/gl.h>
+
+1652168604 /home/dmitry/code/evolution//GL/glu_mangle.h
+
+1652168604 /home/dmitry/code/evolution/IL/il.h
+	<stdio.h>
+	<limits.h>
+	<wchar.h>
+
+1652168604 /home/dmitry/code/evolution/IL/ilu.h
+	"IL/il.h"
+
+1652168604 /home/dmitry/code/evolution//IL/il.h
+	<stdio.h>
+	<limits.h>
+	<wchar.h>
+
+1652168604 /home/dmitry/code/evolution/worldgen.h
+
+1652168604 /home/dmitry/code/evolution/engine.h
+
+1652172620 /home/dmitry/code/evolution/strings.h
+
+1652168604 source:/home/dmitry/code/evolution/minini/minIni.c
+	"minIni.h"
+	<assert.h>
+	<ctype.h>
+	<string.h>
+	<stdlib.h>
+
+1652168604 source:/home/dmitry/code/evolution/strings.cpp
+	<iostream>
+
+1652173178 source:/home/dmitry/code/evolution/worldgen.cpp
+	<cstdlib>
+	<iostream>
+	<map>
+	"worldgen.h"
+	"evo_strings.h"
+
+1652173183 source:/home/dmitry/code/evolution/main.cpp
+	<string>
+	<iostream>
+	<vector>
+	<map>
+	"GL/glut.h"
+	"IL/il.h"
+	"IL/ilu.h"
+	"config.h"
+	"minini/minIni.h"
+	"worldgen.h"
+	"engine.h"
+	"evo_strings.h"
+
+1652168604 /home/dmitry/code/evolution/config.h
+	"minini/minIni.h"
+	<vector>
+
+1652168604 source:/home/dmitry/code/evolution/evo_strings.cpp
+	<iostream>
+
+1652172620 /home/dmitry/code/evolution/evo_strings.h
+

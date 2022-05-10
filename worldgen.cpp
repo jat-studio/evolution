@@ -6,7 +6,7 @@ using namespace std;
 
 /*My library*/
 #include "worldgen.h"
-#include "strings.h"
+#include "evo_strings.h"
 
 // function for calculating hash
 unsigned int RotateLeft(unsigned int value, int count){
